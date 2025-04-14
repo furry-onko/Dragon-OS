@@ -1,25 +1,63 @@
-# Basic commands for using the json library:
-# 1. Load JSON data from a string: json_data = json.loads(json_string)
-# 2. Dump JSON data to a string: json_string = json.dumps(data_dict)
-# 3. Load JSON data from a file: with open('file.json', 'r') as f: data = json.load(f)
-# 4. Write JSON data to a file: with open('file.json', 'w') as f: json.dump(data_dict, f)
-# 5. Pretty print JSON data: print(json.dumps(data_dict, indent=4))
-
-from Apps import dragoninstall as drg_inst
-from Apps import datetime as dt
-
-from System import dragon as drg
-import colorama as c
 import json
 import sys
 import os
+import subprocess
+
+os.system("cls" if os.name == "nt" else "clear")
+print("Please Wait...")
+
+subprocess.call([sys.executable, "-m", "pip", "install", "colorama"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.call([sys.executable, "-m", "pip", "install", "keyboard"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.call([sys.executable, "-m", "pip", "install", "requests"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+from Apps import dragoninstall as drg_inst
+from Apps import datetime as dt
+from System import dragon as drg
+from colorama import Fore, Style, Back, init
 import keyboard
+import requests
+
+init(autoreset=True)
+
+
 user: str = "root"
 
-c.init(autoreset=True)
+def download() -> None:
+    download_core_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/core.json"
+    download_users_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/users.json"
+    download_dragoninstall_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Apps/dragoninstall.py" 
 
-def terminal():
+    download_core_response = requests.get(download_core_link)
+    download_core_response.raise_for_status()
+
+    download_users_response = requests.get(download_users_link)
+    download_users_response.raise_for_status()
+
+    download_dragoninstall_response = requests.get(download_dragoninstall_link)
+    download_dragoninstall_response.raise_for_status()
+
+    os.makedirs("Files/config", exist_ok=True)
+    os.chdir("Files/config")
+    with open("core.json", "wb") as f:
+        f.write(download_core_response.content)
+        f.close()
+    
+    with open("users.json", "wb") as f:
+        f.write(download_users_response.content)
+        f.close()
+    
+    os.chdir("../..")
+    
+    os.makedirs("Apps", exist_ok=True)
+    os.chdir("Apps")
+    with open("dragoninstall.py", "wb") as f:
+        f.write(download_dragoninstall_response.content)
+        f.close()
+
+def terminal() -> None:
     global user
+    os.system("cls" if os.name == "nt" else "clear")
+
     def clear():
         os.system("cls" if os.name == "nt" else "clear")
         print(f"${user}: ", end="", flush=True)
@@ -55,23 +93,19 @@ def terminal():
                 print("")
 
             else:
-                try:
-                    with open("Files/config/users.json", "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                        if newuser.lower() in [user.lower() for user in data["users"]]:
-                            user = newuser
-                            print(f"User changed to {user}")
-                        else:
-                            print("USER NOT FOUND")
-
-                except:
-                    print("ERROR. CONFIG FILE NOT FOUND. PLEASE INSTALL YOUR SYSTEM")
+                with open("Files/config/users.json", "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if newuser.lower() in [user.lower() for user in data["users"]]:
+                        user = newuser
+                        print(f"User changed to {user}")
+                    else:
+                        print("USER NOT FOUND")
 
         elif cmd == "ls":
             print("dragoninstall", end="  ")
             print("datetime", end="  ")
             print("dragon", end="  ")
-            print("user", end="  ")
+            print("user")
 
-os.system("cls" if os.name == "nt" else "clear")
+download()
 terminal()
