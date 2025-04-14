@@ -36,8 +36,13 @@ def terminal():
             print("Exiting...")
             break
             
-        elif cmd == "datetime":dt.execute()
-        elif cmd == "dragon": drg.execute()
+        elif cmd == "datetime":
+            dt.execute()
+            break
+
+        elif cmd == "dragon":
+            drg.execute()
+            break
 
         elif cmd == "user":
             print(f"Current user: {user}")
@@ -51,21 +56,17 @@ def terminal():
 
             else:
                 try:
-                    with open("Files\\config\\users.json", "r", encoding="utf-8") as f:
+                    with open("Files/config/users.json", "r", encoding="utf-8") as f:
                         data = json.load(f)
                         if newuser.lower() in [user.lower() for user in data["users"]]:
                             user = newuser
                             print(f"User changed to {user}")
                         else:
                             print("USER NOT FOUND")
-                            print(data["users"])
-                            print(newuser)
+
                 except:
-                    print("ATTEMPTING TO RESTORE FILE")
-                    with open("Files\\config\\users.json", "w") as f:
-                        data = {"users": ["root"]}
-                        json.dump(data, f)
-        
+                    print("ERROR. CONFIG FILE NOT FOUND. PLEASE INSTALL YOUR SYSTEM")
+
         elif cmd == "ls":
             print("dragoninstall", end="  ")
             print("datetime", end="  ")
