@@ -9,7 +9,9 @@ print("Please Wait...")
 subprocess.call([sys.executable, "-m", "pip", "install", "colorama"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 subprocess.call([sys.executable, "-m", "pip", "install", "keyboard"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 subprocess.call([sys.executable, "-m", "pip", "install", "requests"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.call([sys.executable, "-m", "pip", "install", "blessed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+import blessed
 from Apps import dragoninstall as drg_inst
 from Apps import datetime as dt
 from System import dragon as drg
@@ -23,36 +25,45 @@ init(autoreset=True)
 user: str = "root"
 
 def download() -> None:
-    download_core_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/core.json"
-    download_users_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/users.json"
-    download_dragoninstall_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Apps/dragoninstall.py" 
+    try:
+        download_core_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/core.json"
+        download_users_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/users.json"
+        download_dragoninstall_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Apps/dragoninstall.py" 
 
-    download_core_response = requests.get(download_core_link)
-    download_core_response.raise_for_status()
+        download_core_response = requests.get(download_core_link)
+        download_core_response.raise_for_status()
 
-    download_users_response = requests.get(download_users_link)
-    download_users_response.raise_for_status()
+        download_users_response = requests.get(download_users_link)
+        download_users_response.raise_for_status()
 
-    download_dragoninstall_response = requests.get(download_dragoninstall_link)
-    download_dragoninstall_response.raise_for_status()
+        download_dragoninstall_response = requests.get(download_dragoninstall_link)
+        download_dragoninstall_response.raise_for_status()
 
-    os.makedirs("Files/config", exist_ok=True)
-    os.chdir("Files/config")
-    with open("core.json", "wb") as f:
-        f.write(download_core_response.content)
-        f.close()
-    
-    with open("users.json", "wb") as f:
-        f.write(download_users_response.content)
-        f.close()
-    
-    os.chdir("../..")
-    
-    os.makedirs("Apps", exist_ok=True)
-    os.chdir("Apps")
-    with open("dragoninstall.py", "wb") as f:
-        f.write(download_dragoninstall_response.content)
-        f.close()
+        os.makedirs("Files/config", exist_ok=True)
+        os.chdir("Files/config")
+        if not os.path.exists("core.json") and not os.path.exists("users.json"):        
+            with open("core.json", "wb") as f:
+                f.write(download_core_response.content)
+                f.close()
+        
+            with open("users.json", "wb") as f:
+                f.write(download_users_response.content)
+                f.close()
+        
+        
+        os.chdir("../..")
+        
+        if not os.path.exists("Apps/dragoninstall.py"):
+            os.makedirs("Apps", exist_ok=True)
+            os.chdir("Apps")
+            with open("dragoninstall.py", "wb") as f:
+                f.write(download_dragoninstall_response.content)
+                f.close()
+    except:
+        print("ERROR DOWNLOADING FILES")
+        print("PLEASE CHECK YOUR INTERNET CONNECTION")
+        print("OR CHECK YOUR FIREWALL SETTINGS")
+        exit(-3)
 
 def terminal() -> None:
     global user
