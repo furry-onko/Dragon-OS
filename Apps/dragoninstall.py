@@ -6,6 +6,7 @@ from colorama import Fore, Style, Back, init
 init(autoreset=True)
 
 def checkInstallation() -> bool:
+    os.chdir('../..')
     try:
         with open("Files/config/core.json", "r", encoding='utf-8') as f:
             json_data = json.load(f)
