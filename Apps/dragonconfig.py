@@ -3,36 +3,46 @@ import sys
 import os
 import subprocess
 from colorama import Fore, Style, Back, init
-from blessed import Terminal
+import curses as c
+from time import sleep
 
-init()
+init(autoreset=True)
 
-def menu():
-    term: object = Terminal()
-    menu_items: list = ["System", "Users", "Info", "Exit"]
+def menu(stdscr):
+    c.curs_set(0)
+    stdscr.clear()
+    stdscr.refresh()
+    stdscr.keypad(True)
 
-    with term.fullscreen(), term.cbreak(), term.hidden_cursor():
-        while True:
-            print(term.clear)
-            print(term.center(term.bold("Dragon-OS Configuration Menu")))
+    menu: list = ["System", "Options", "Exit"]
+    selected: int = 0
 
-            for idx, item in enumerate(menu_items):
-                if idx == current_row:
-                    print(term.move_yx(term.height // 2 + idx, term.width // 2 - len(item) // 2) +
-                          term.reverse(item))
-                else:
-                    print(term.move_yx(term.height // 2 + idx, term.width // 2 - len(item) // 2) +
-                          item)
+    while True:
+        stdscr.clear()
 
-            key = term.inkey()
-            if key.name == "KEY_UP" and current_row > 0:
-                current_row -= 1
-            elif key.name == "KEY_DOWN" and current_row < len(menu_items) - 1:
-                current_row += 1
-            elif key.name in ["KEY_ENTER", "KEY_RETURN"]:
-                if menu_items[current_row] == "Exit":
-                    break
+        for i, item in enumerate(menu):
+            x: int = i * 10
+            
+            if i == selected:
+                stdscr.attron(c.A_REVERSE)
+                stdscr.addstr(0, x, f"{item}")
+                stdscr.attroff(c.A_REVERSE)
+            
+            else:
+                stdscr.addstr(0, x, f"{item}")
 
+        stdscr.refresh()
+
+        key = stdscr.getch()
+
+        if key == c.KEY_RIGHT:
+            selected = (selected + 1) % len(menu)
+        
+        elif key == c.KEY_LEFT:
+            selected = (selected - 1) % len(menu)
+        
+        elif key == c.KEY_ENTER or key in [10, 13]:
+            break
 
 def execute() -> None:
-    menu()
+    c.wrapper(menu)

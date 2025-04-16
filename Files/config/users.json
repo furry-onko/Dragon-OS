@@ -1,1 +1,12 @@
-{"users":["root"]}
+{
+    "users":[
+        {
+            "user_name": "root",
+            "user_passw": ""
+        },
+        {
+            "user_name": "onko",
+            "user_passw": "OwO"
+        }
+    ]
+}
