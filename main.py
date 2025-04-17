@@ -42,30 +42,20 @@ print("""
 
 print("Loading...")
 
-os.system("title Dragon OS - Loading Libraries... (1/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "colorama"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (2/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "keyboard"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (3/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "requests"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (4/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "json"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (5/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "os"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (6/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "sys"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (7/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "bcrypt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (8/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "asciimatics"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-os.system("title Dragon OS - Loading Libraries... (9/)")
-subprocess.call([sys.executable, "-m", "pip", "install", "time"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+dependencies: list = ["colorama", "keyboard", "requests", "json", "os", "sys", "bcrypt", "time", "windows-curses"]
+dependencies_count: int = len(dependencies)
 
+for i, package in enumerate(dependencies):
+    try:
+        os.system(f"title Dragon OS - Loading Libraries... {i}/{dependencies_count}")
+        subprocess.call([sys.executable, "-m", "pip", "install", package], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    except:
+        print(f"[\033[0;31mERROR\033[0m]      Error loading library: {package}")
 
 os.system("title Dragon OS - Loading Libraries... - Done")
 
 os.system("title Dragon OS - Importing Libraries...")
-import blessed
 from Apps import dragoninstall as drg_inst
 from Apps import datetime as dt
 from Apps import dragonconfig as dc
@@ -73,7 +63,6 @@ from System import dragon as drg
 from colorama import Fore, Style, Back, init
 import keyboard
 import requests
-import hashlib
 import bcrypt
 os.system("title Dragon OS - Importing Libraries... - Done")
 
@@ -117,11 +106,11 @@ def download() -> None:
             with open("dragoninstall.py", "wb") as f:
                 f.write(download_dragoninstall_response.content)
                 f.close()
-    except:
-        print("ERROR DOWNLOADING FILES")
+    except Exception as x:
+        print(f"ERROR DOWNLOADING FILES: {x}")
         print("PLEASE CHECK YOUR INTERNET CONNECTION")
         print("OR CHECK YOUR FIREWALL SETTINGS")
-        exit(-3)
+        # exit(-3)
 
 def terminal() -> None:
     global user
