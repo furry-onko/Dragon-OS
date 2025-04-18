@@ -10,7 +10,11 @@ init(autoreset=True)
 
 def draw_popup(stdscr, option) -> None:
     in_popup: bool = True
+    c.start_color()
+    c.init_pair(1, c.COLOR_MAGENTA, c.COLOR_BLACK)
+    c.init_pair(2, c.COLOR_CYAN, c.COLOR_BLACK)
 
+    are_you_sure: list = ["Yes", "No"]
     lang: list = ["English", "Polski", "Español"]
     sysinfo: list = ["Creators", "Version", "Contact"]
     sysinfo_content: dict = {
@@ -19,6 +23,8 @@ def draw_popup(stdscr, option) -> None:
         "Contact": ["GitHub: @furry-onko", "Telegram, Instagram, etc: @furry_onko"]
     }
     bootseq: list = ["Enable FastBoot", "Disable FastBoot"]
+
+    user_options: list = ["Change username", "Change password", "Change account type", "Delete user", "Add a new user"]
 
     height, width = stdscr.getmaxyx()
     popup_width: int = 75
@@ -39,21 +45,30 @@ def draw_popup(stdscr, option) -> None:
         popup_height = len(lang) + 4
         start_y = height // 2 - popup_height // 2
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
-        popup.box()
-
-        popup.addstr(1, 2, option)
-
-        for idy, item in enumerate(lang):
-            y: int = 2 + idy
-            popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
-        popup.refresh()
+        popup.keypad(True)
 
         while True:
+            popup.clear()
+            popup.box()
+            popup.addstr(1, 2, option)
+
+            for idy, item in enumerate(lang):
+                y: int = 2 + idy
+                popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
+
+            popup.refresh()
+
             key = popup.getch()
-            if key in [27, 10, 13]:
+            if key == 27:
                 stdscr.clear()
                 stdscr.refresh()
                 break
+            
+            elif key == c.KEY_DOWN:
+                selected = (selected +1) % len(lang)
+            
+            elif key == c.KEY_UP:
+                selected = (selected -1) % len(lang)
 
     elif option == "Users":
         with open('Files/config/users.json', 'r') as f:
@@ -70,10 +85,20 @@ def draw_popup(stdscr, option) -> None:
             popup.clear()
             popup.box()
             popup.addstr(1, 2, option)
+            
+            with open("Files/config/core.json", 'r') as f:
+                data: dict | list = json.load(f)
+                current_user: str = data["CurrentUser"]
 
             for idy, item in enumerate(usernames):
                 y: int = 2 + idy
-                popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
+                if item == current_user:
+                    popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}]")
+                    popup.attron(c.color_pair(2))
+                    popup.addstr(y, 6, f"{item} ← Current user")
+                    popup.attroff(c.color_pair(2))
+                else:
+                    popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
             
             popup.refresh()
 
@@ -91,11 +116,57 @@ def draw_popup(stdscr, option) -> None:
             elif key == c.KEY_UP:
                 selected = (selected -1) % len(usernames)
             
-        popup.clear()
-        popup.refresh()
+            elif key in [c.KEY_ENTER, 10, 13]:
+                # popup.clear()
+                # popup.box()
+                # for 
+                ...
 
     elif option == "System Information":
-        ...
+        popup_height = len(sysinfo) + 4
+        start_y = height // 2 - popup_height // 2
+        popup = c.newwin(popup_height, popup_width, start_y, start_x)
+        popup.keypad(True)
+
+        while True:
+            popup.clear()
+            popup.box()
+            popup.attron(c.color_pair(1))
+            popup.addstr(1, 2, option)
+            popup.attroff(c.color_pair(1))
+
+            for idy, item in enumerate(sysinfo):
+                y: int = 2 + idy
+                popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
+
+            popup.refresh()
+
+            key = popup.getch()
+            
+            if key in [c.KEY_ENTER, 10, 13]:
+                while True:
+                    popup.clear()
+                    popup.box()
+                    popup.attron(c.color_pair(1))
+                    popup.addstr(1, 2, sysinfo[selected])
+                    popup.attroff(c.color_pair(1))
+                    for text_id, text in enumerate(sysinfo_content[sysinfo[selected]]):
+                        y: int = 2 + text_id
+                        popup.addstr(y, 2, text)
+                    popup.refresh()
+                    key = popup.getch()
+                    if key == 27: break
+
+            elif key == 27:
+                stdscr.clear()
+                stdscr.refresh()
+                break
+            
+            elif key == c.KEY_UP:
+                selected = (selected -1) % len(sysinfo)
+            
+            elif key == c.KEY_DOWN:
+                selected = (selected +1) % len(sysinfo)
     
     elif option == "Packages":
         ...
@@ -162,6 +233,15 @@ def menu(stdscr):
         if in_submenu:
             submenu = submenu_content[top_menu[selected_top]]
             draw_sub_menu(stdscr, submenu, selected_sub)
+
+        down_stripe_content: str = "⇄ Navigate on top menu        ⇅ Navigate on submenu        [Enter] Open        [Esc] Quit menu"
+        down_stripe_content = down_stripe_content.ljust(c.COLS)
+
+        try:
+            stdscr.attron(c.A_REVERSE)
+            stdscr.addstr(c.LINES -2, 0, down_stripe_content)
+            stdscr.attroff(c.A_REVERSE)
+        except: pass
         
         stdscr.refresh()
         key = stdscr.getch()

@@ -2,23 +2,28 @@
     "users":[
         {
             "user_name": "root",
-            "user_passw": ""
+            "user_passw": "",
+            "account_type": "admin"
         },
         {
             "user_name": "onko",
-            "user_passw": "OwO"
+            "user_passw": "OwO",
+            "account_type": "admin"
         },
         {
             "user_name": "dupa",
-            "user_passw": "xddd"
+            "user_passw": "xddd",
+            "account_type": "user"
         },
         {
             "user_name": "zryt",
-            "user_passw": "szalom"
+            "user_passw": "szalom",
+            "account_type": "user"
         },
         {
             "user_name": "oil_up",
-            "user_passw": "mrr"
+            "user_passw": "mrr",
+            "account_type": "user"
         }
     ]
 }

@@ -1,5 +1,6 @@
 # By Onko Aikuu :3
 import os
+import sys
 os.system("py -m pip install subprocess")
 import subprocess
 
@@ -7,47 +8,45 @@ os.chdir(os.getcwd())
 os.system("title Dragon OS - Loading Libraries...")
 os.system("cls" if os.name == "nt" else "clear")
 
-print("""
-⢗⣝⢮⡳⣝⢮⡳⣝⢮⡳⣝⢮⡳⣝⢮⢯⡺⣝⢮⢯⡺⣝⣞⢽⣪⢟⡮⡯⣞⢽⢵⣫⢯⢞⡽⣝⣞⢽⢝⣞⡽⣝⢽⡺⣽⡹⣝⡽⣝⣵
-⢕⢗⡳⣝⢮⢳⣹⡪⡳⣝⢮⡳⣝⢮⢯⡺⣝⢮⣫⡳⡽⣕⣗⢯⢞⡵⡯⣞⡵⡯⣳⣳⡫⡯⣞⣗⢽⣝⢽⣺⡺⡽⡵⣻⣺⡺⣵⡻⣺⣺
-⡺⣝⢞⢮⡳⣝⢮⡺⣝⢮⡳⣝⢮⢯⡺⣝⢮⣳⡳⡽⣝⣞⢮⢯⣫⢾⢝⡮⡯⣞⣗⢗⡽⣝⣞⢮⣗⢗⡯⣞⣞⡽⣝⣞⣞⣞⡵⣯⣳⣳
-⡞⡮⣫⢞⢞⢮⡳⣝⢮⡳⣝⡮⡯⣳⢽⡺⣵⡳⡮⣙⠺⢪⢯⣳⡹⢽⢝⡾⣝⣞⡮⡯⡯⣞⡮⣗⣗⢯⢯⣞⣞⢾⢵⣳⣳⡳⣽⣺⣺⣪
-⢮⡫⡮⣫⣫⡳⣝⢮⣳⢽⣕⢯⢯⣞⣗⠽⡮⡯⡯⡯⡯⣦⣈⡘⠺⠳⣍⠚⢗⢷⢽⢽⣝⣮⣻⡺⡮⡯⣗⣗⣗⣯⣻⣺⣪⢯⣞⣞⣞⣮
-⢕⢯⡫⣞⢮⢞⡚⠓⠓⠓⢹⡽⠁⢳⡳⡯⡶⣬⣉⠋⠫⠗⣯⡷⣷⣔⡤⡀⡀⠙⠹⢵⣳⣳⣳⢽⢽⢽⣺⣺⣺⣺⣺⣺⣺⢽⣺⣺⣺⣺
-⡹⣕⢯⢞⡽⣕⢯⣫⢏⣯⣳⣫⢯⢗⡯⡯⣻⣺⣞⣿⣶⣦⣄⡈⡉⠙⠻⠿⣾⣵⣰⡀⠄⠁⠋⠫⢯⣻⣺⣺⢞⣞⣞⣞⢾⣝⣞⣞⣞⢾
-⡪⣗⢯⡳⣝⡮⡯⣺⢝⡮⣺⢼⢝⣵⣋⣋⣉⣉⣉⣉⣁⣉⣟⣿⣷⣧⣣⣢⣠⣀⢉⠙⠛⠻⢶⣦⡄⣀⠈⢞⣯⣗⣗⡯⣗⣗⣗⡷⡽⡽
-⢽⣪⢗⡯⣳⢝⣞⡵⡯⣺⡳⣽⣽⣾⣻⣯⡿⠏⠻⢟⣿⣭⣉⡉⡈⡉⡙⡛⡙⠛⠛⠛⠛⠒⠊⠺⡷⣖⡿⠛⠚⠚⠚⠙⠚⠚⢑⡿⡽⣽
-⣳⠳⠫⣞⡗⠯⠞⣞⡽⠾⢿⢻⣷⡟⠉⢀⢀⢄⣮⣾⢿⢽⣻⣟⡷⠿⠿⠿⠿⠿⠻⠟⢷⢗⣧⡷⣮⣯⢴⣤⣦⣴⣤⡔⢀⡴⡽⣞⡯⡷
-⣳⣲⣲⡳⣳⡲⣲⢽⢵⣲⣽⢿⡷⠁⢔⢑⣬⣾⢗⡿⣿⣝⣝⡛⣻⣷⢷⡷⣷⣻⡾⠋⠁⠀⡀⠉⠛⠺⢟⣷⣻⣞⣷⣳⢯⡯⣯⢷⣻⢽
-⢮⣺⢼⡺⣕⢯⣳⡫⣗⡷⣿⡛⠁⢌⢢⣾⢿⣺⡳⠁⠀⠉⢳⣿⣻⢽⢽⡽⠋⡁⣄⣆⣶⣼⢾⡾⣮⣖⣔⢄⠅⠛⢚⡽⣯⢯⡷⣻⣞⣯
-⣳⡳⣝⢮⢯⡳⣳⢽⢵⣿⣻⡇⠌⣢⣾⡿⣝⢟⠻⠷⣦⣤⣿⣳⢽⢽⣕⣶⣻⣻⢽⡽⣳⡽⡽⣞⣗⣯⢯⢇⣱⢾⡽⡯⣯⠏⣯⣗⣗⡷
-⣗⢽⡺⣝⡵⣫⢾⢕⣿⢾⣻⠎⣸⣯⣿⣻⢪⠮⠊⠀⠀⢸⡾⣺⢽⣳⣳⣳⢗⡯⣟⣞⡷⡯⣟⣗⣟⣞⣷⣻⢽⣻⣺⢯⢯⠇⣗⣷⡳⡯
-⢷⢝⡾⣕⢯⣳⡫⡯⣾⣿⣻⡼⣿⠹⣾⣗⣿⡶⠶⠶⠶⠾⡯⡯⣟⣞⣗⡯⣯⢯⢷⣳⢯⢿⢵⣻⢮⣗⣷⣫⡯⡷⣯⣻⡝⠀⣿⢮⢯⢯
-⢽⢵⣫⢾⢝⡮⣞⡽⣽⡾⣯⣟⠣⢀⢻⣽⣞⢖⡀⡀⠀⣀⣽⢯⣟⢾⢵⣻⢽⢽⣻⣺⢯⣻⡽⣞⣟⣞⣾⣺⢽⣽⣺⢾⠁⢠⣿⢽⢽⢽
-⣹⢵⣳⡫⣗⡽⡮⣻⣺⢿⣯⢿⣻⡆⡂⣻⣷⢫⣧⡶⠟⠋⠀⠈⣫⡿⡽⣽⢽⣻⣺⢾⢽⣳⢯⣗⣟⡾⣺⢾⢽⣺⢾⠋⡀⣾⢯⢯⢯⣻
-⢮⣳⡳⡽⣕⢯⢯⢞⣞⣿⣽⣟⣷⣻⡔⢄⢿⣿⣳⣝⢆⠀⢠⡾⠏⠀⠉⣯⠟⠾⣽⡽⡽⠾⣽⠚⠁⠈⢯⣯⣟⠃⡟⠠⣼⡿⡽⡽⣽⣺
-⢳⡳⡽⣝⣞⡽⡽⣝⣞⢞⣞⣯⣷⢿⡽⣖⢆⠻⣽⣾⣝⣾⣻⢕⡄⡀⣸⡟⠀⠀⢸⡇⠀⠀⢿⣇⢄⢢⣢⣷⡏⢀⢐⣾⣻⢽⢽⢽⣺⢾
-⣝⡽⣝⣞⣞⣞⡽⣺⢮⡻⡮⣻⣽⢿⡽⣯⢿⡌⡊⡻⢽⣟⣮⣗⡽⣲⡿⣪⢦⡂⢸⣗⡲⡰⣜⣿⡼⣿⢽⡾⢐⣰⡾⣟⢾⢽⢽⡽⣞⣟
-⡳⣽⣺⣺⣺⣺⣺⣳⣫⢯⠯⣳⣝⢿⣻⣽⢷⣻⡄⠢⡑⢌⢛⠿⣻⣿⣽⡾⣷⣽⢾⡷⣷⡿⠿⢚⢩⣰⡿⢡⣵⡿⡽⡽⡽⣽⢽⢾⣽⣺
-⢽⡺⡦⣦⣢⢦⣤⣤⢼⣻⢄⡼⣺⣝⢿⣻⣿⡽⣟⣿⢶⢶⢴⣁⠢⡐⡩⢉⠍⡚⣫⣫⣷⢾⡽⣷⢿⣝⣼⡿⣻⣺⢽⢯⣻⡽⡽⣯⢾⣺
-⢯⢯⢯⣞⢾⣝⣞⢾⢽⣺⢽⣝⢷⣝⢷⣝⡷⣟⣟⣿⣻⣿⣻⣯⡿⣷⢮⣶⣟⣿⣻⣽⡯⣿⣽⣟⣯⣟⣗⡯⣗⡯⣟⣽⣳⣻⡽⡯⣯⢷
-⢽⢽⢵⡳⡯⣞⢾⢽⢽⣺⢽⣺⣳⣝⣗⣗⡯⣟⡾⡮⣗⡯⣟⡷⣿⣻⣯⣷⢿⢾⢯⡷⣻⣽⣺⣳⣳⣗⡯⣯⢯⣟⡽⣞⣗⣯⢯⡿⣽⣻
-⡽⣝⣗⡯⡯⡯⡯⡯⣗⡯⣗⣗⣗⣗⣗⣗⡯⣗⡯⡯⣗⡿⡽⣽⣝⣗⡷⣽⢽⢽⣳⣻⣳⣗⣯⣞⣗⡷⡯⡿⡽⣞⣯⣟⡾⡽⡯⣟⣗⣟""".center(os.get_terminal_size().columns))
-print("""
-┳┓┳┓┏┓┏┓┏┓┳┓
-┃┃┣┫┣┫┃┓┃┃┃┃
-┻┛┛┗┛┗┗┛┗┛┛┗
-""".center(os.get_terminal_size().columns))
+print("⢗⣝⢮⡳⣝⢮⡳⣝⢮⡳⣝⢮⡳⣝⢮⢯⡺⣝⢮⢯⡺⣝⣞⢽⣪⢟⡮⡯⣞⢽⢵⣫⢯⢞⡽⣝⣞⢽⢝⣞⡽⣝⢽⡺⣽⡹⣝⡽⣝⣵".center(os.get_terminal_size().columns))
+print("⢕⢗⡳⣝⢮⢳⣹⡪⡳⣝⢮⡳⣝⢮⢯⡺⣝⢮⣫⡳⡽⣕⣗⢯⢞⡵⡯⣞⡵⡯⣳⣳⡫⡯⣞⣗⢽⣝⢽⣺⡺⡽⡵⣻⣺⡺⣵⡻⣺⣺".center(os.get_terminal_size().columns))
+print("⡺⣝⢞⢮⡳⣝⢮⡺⣝⢮⡳⣝⢮⢯⡺⣝⢮⣳⡳⡽⣝⣞⢮⢯⣫⢾⢝⡮⡯⣞⣗⢗⡽⣝⣞⢮⣗⢗⡯⣞⣞⡽⣝⣞⣞⣞⡵⣯⣳⣳".center(os.get_terminal_size().columns))
+print("⡞⡮⣫⢞⢞⢮⡳⣝⢮⡳⣝⡮⡯⣳⢽⡺⣵⡳⡮⣙⠺⢪⢯⣳⡹⢽⢝⡾⣝⣞⡮⡯⡯⣞⡮⣗⣗⢯⢯⣞⣞⢾⢵⣳⣳⡳⣽⣺⣺⣪".center(os.get_terminal_size().columns))
+print("⢮⡫⡮⣫⣫⡳⣝⢮⣳⢽⣕⢯⢯⣞⣗⠽⡮⡯⡯⡯⡯⣦⣈⡘⠺⠳⣍⠚⢗⢷⢽⢽⣝⣮⣻⡺⡮⡯⣗⣗⣗⣯⣻⣺⣪⢯⣞⣞⣞⣮".center(os.get_terminal_size().columns))
+print("⢕⢯⡫⣞⢮⢞⡚⠓⠓⠓⢹⡽⠁⢳⡳⡯⡶⣬⣉⠋⠫⠗⣯⡷⣷⣔⡤⡀⡀⠙⠹⢵⣳⣳⣳⢽⢽⢽⣺⣺⣺⣺⣺⣺⣺⢽⣺⣺⣺⣺".center(os.get_terminal_size().columns))
+print("⡹⣕⢯⢞⡽⣕⢯⣫⢏⣯⣳⣫⢯⢗⡯⡯⣻⣺⣞⣿⣶⣦⣄⡈⡉⠙⠻⠿⣾⣵⣰⡀⠄⠁⠋⠫⢯⣻⣺⣺⢞⣞⣞⣞⢾⣝⣞⣞⣞⢾".center(os.get_terminal_size().columns))
+print("⡪⣗⢯⡳⣝⡮⡯⣺⢝⡮⣺⢼⢝⣵⣋⣋⣉⣉⣉⣉⣁⣉⣟⣿⣷⣧⣣⣢⣠⣀⢉⠙⠛⠻⢶⣦⡄⣀⠈⢞⣯⣗⣗⡯⣗⣗⣗⡷⡽⡽".center(os.get_terminal_size().columns))
+print("⢽⣪⢗⡯⣳⢝⣞⡵⡯⣺⡳⣽⣽⣾⣻⣯⡿⠏⠻⢟⣿⣭⣉⡉⡈⡉⡙⡛⡙⠛⠛⠛⠛⠒⠊⠺⡷⣖⡿⠛⠚⠚⠚⠙⠚⠚⢑⡿⡽⣽".center(os.get_terminal_size().columns))
+print("⣳⠳⠫⣞⡗⠯⠞⣞⡽⠾⢿⢻⣷⡟⠉⢀⢀⢄⣮⣾⢿⢽⣻⣟⡷⠿⠿⠿⠿⠿⠻⠟⢷⢗⣧⡷⣮⣯⢴⣤⣦⣴⣤⡔⢀⡴⡽⣞⡯⡷".center(os.get_terminal_size().columns))
+print("⣳⣲⣲⡳⣳⡲⣲⢽⢵⣲⣽⢿⡷⠁⢔⢑⣬⣾⢗⡿⣿⣝⣝⡛⣻⣷⢷⡷⣷⣻⡾⠋⠁⠀⡀⠉⠛⠺⢟⣷⣻⣞⣷⣳⢯⡯⣯⢷⣻⢽".center(os.get_terminal_size().columns))
+print("⢮⣺⢼⡺⣕⢯⣳⡫⣗⡷⣿⡛⠁⢌⢢⣾⢿⣺⡳⠁⠀⠉⢳⣿⣻⢽⢽⡽⠋⡁⣄⣆⣶⣼⢾⡾⣮⣖⣔⢄⠅⠛⢚⡽⣯⢯⡷⣻⣞⣯".center(os.get_terminal_size().columns))
+print("⣳⡳⣝⢮⢯⡳⣳⢽⢵⣿⣻⡇⠌⣢⣾⡿⣝⢟⠻⠷⣦⣤⣿⣳⢽⢽⣕⣶⣻⣻⢽⡽⣳⡽⡽⣞⣗⣯⢯⢇⣱⢾⡽⡯⣯⠏⣯⣗⣗⡷".center(os.get_terminal_size().columns))
+print("⣗⢽⡺⣝⡵⣫⢾⢕⣿⢾⣻⠎⣸⣯⣿⣻⢪⠮⠊⠀⠀⢸⡾⣺⢽⣳⣳⣳⢗⡯⣟⣞⡷⡯⣟⣗⣟⣞⣷⣻⢽⣻⣺⢯⢯⠇⣗⣷⡳⡯".center(os.get_terminal_size().columns))
+print("⢷⢝⡾⣕⢯⣳⡫⡯⣾⣿⣻⡼⣿⠹⣾⣗⣿⡶⠶⠶⠶⠾⡯⡯⣟⣞⣗⡯⣯⢯⢷⣳⢯⢿⢵⣻⢮⣗⣷⣫⡯⡷⣯⣻⡝⠀⣿⢮⢯⢯".center(os.get_terminal_size().columns))
+print("⢽⢵⣫⢾⢝⡮⣞⡽⣽⡾⣯⣟⠣⢀⢻⣽⣞⢖⡀⡀⠀⣀⣽⢯⣟⢾⢵⣻⢽⢽⣻⣺⢯⣻⡽⣞⣟⣞⣾⣺⢽⣽⣺⢾⠁⢠⣿⢽⢽⢽".center(os.get_terminal_size().columns))
+print("⣹⢵⣳⡫⣗⡽⡮⣻⣺⢿⣯⢿⣻⡆⡂⣻⣷⢫⣧⡶⠟⠋⠀⠈⣫⡿⡽⣽⢽⣻⣺⢾⢽⣳⢯⣗⣟⡾⣺⢾⢽⣺⢾⠋⡀⣾⢯⢯⢯⣻".center(os.get_terminal_size().columns))
+print("⢮⣳⡳⡽⣕⢯⢯⢞⣞⣿⣽⣟⣷⣻⡔⢄⢿⣿⣳⣝⢆⠀⢠⡾⠏⠀⠉⣯⠟⠾⣽⡽⡽⠾⣽⠚⠁⠈⢯⣯⣟⠃⡟⠠⣼⡿⡽⡽⣽⣺".center(os.get_terminal_size().columns))
+print("⢳⡳⡽⣝⣞⡽⡽⣝⣞⢞⣞⣯⣷⢿⡽⣖⢆⠻⣽⣾⣝⣾⣻⢕⡄⡀⣸⡟⠀⠀⢸⡇⠀⠀⢿⣇⢄⢢⣢⣷⡏⢀⢐⣾⣻⢽⢽⢽⣺⢾".center(os.get_terminal_size().columns))
+print("⣝⡽⣝⣞⣞⣞⡽⣺⢮⡻⡮⣻⣽⢿⡽⣯⢿⡌⡊⡻⢽⣟⣮⣗⡽⣲⡿⣪⢦⡂⢸⣗⡲⡰⣜⣿⡼⣿⢽⡾⢐⣰⡾⣟⢾⢽⢽⡽⣞⣟".center(os.get_terminal_size().columns))
+print("⡳⣽⣺⣺⣺⣺⣺⣳⣫⢯⠯⣳⣝⢿⣻⣽⢷⣻⡄⠢⡑⢌⢛⠿⣻⣿⣽⡾⣷⣽⢾⡷⣷⡿⠿⢚⢩⣰⡿⢡⣵⡿⡽⡽⡽⣽⢽⢾⣽⣺".center(os.get_terminal_size().columns))
+print("⢽⡺⡦⣦⣢⢦⣤⣤⢼⣻⢄⡼⣺⣝⢿⣻⣿⡽⣟⣿⢶⢶⢴⣁⠢⡐⡩⢉⠍⡚⣫⣫⣷⢾⡽⣷⢿⣝⣼⡿⣻⣺⢽⢯⣻⡽⡽⣯⢾⣺".center(os.get_terminal_size().columns))
+print("⢯⢯⢯⣞⢾⣝⣞⢾⢽⣺⢽⣝⢷⣝⢷⣝⡷⣟⣟⣿⣻⣿⣻⣯⡿⣷⢮⣶⣟⣿⣻⣽⡯⣿⣽⣟⣯⣟⣗⡯⣗⡯⣟⣽⣳⣻⡽⡯⣯⢷".center(os.get_terminal_size().columns))
+print("⢽⢽⢵⡳⡯⣞⢾⢽⢽⣺⢽⣺⣳⣝⣗⣗⡯⣟⡾⡮⣗⡯⣟⡷⣿⣻⣯⣷⢿⢾⢯⡷⣻⣽⣺⣳⣳⣗⡯⣯⢯⣟⡽⣞⣗⣯⢯⡿⣽⣻".center(os.get_terminal_size().columns))
+print("⡽⣝⣗⡯⡯⡯⡯⡯⣗⡯⣗⣗⣗⣗⣗⣗⡯⣗⡯⡯⣗⡿⡽⣽⣝⣗⡷⣽⢽⢽⣳⣻⣳⣗⣯⣞⣗⡷⡯⡿⡽⣞⣯⣟⡾⡽⡯⣟⣗⣟".center(os.get_terminal_size().columns))
+print("┳┓┳┓┏┓┏┓┏┓┳┓".center(os.get_terminal_size().columns))
+print("┃┃┣┫┣┫┃┓┃┃┃┃".center(os.get_terminal_size().columns))
+print("┻┛┛┗┛┗┗┛┗┛┛┗".center(os.get_terminal_size().columns))
 
 print("Loading... ".center(os.get_terminal_size().columns))
 
 dependencies: list = ["colorama", "keyboard", "requests", "json", "os", "sys", "bcrypt", "time", "windows-curses"]
-dependencies_count: int = len(dependencies)
 
 for i, package in enumerate(dependencies):
     try:
-        os.system(f"title Dragon OS - Loading Libraries... {i}/{dependencies_count}")
+        os.system(f"title Dragon OS - Loading Libraries... {i}/{len(dependencies)}")
+        print(f"[\033[34mINFO\033[0m]      Loading libraries {i}/{len(dependencies)} ({package})", end="\r")
         subprocess.call([sys.executable, "-m", "pip", "install", package], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(" " * 50, end="\r")
 
     except:
         print(f"[\033[0;31mERROR\033[0m]      Error loading library: {package}")
@@ -64,13 +63,16 @@ import keyboard
 import requests
 import bcrypt
 import json
-import sys
 os.system("title Dragon OS - Importing Libraries... - Done")
 
 init(autoreset=True)
 
 
-user: str = "root"
+user: str = ""
+with open("Files/config/core.json", "r") as f:
+    data: dict | list = json.load(f)
+    user = data["CurrentUser"]
+    f.close()
 
 def download() -> None:
     try:
@@ -117,14 +119,14 @@ def terminal() -> None:
     global user
     os.system("cls" if os.name == "nt" else "clear")
 
-    def clear():
+    def clear() -> None:
         os.system("cls" if os.name == "nt" else "clear")
-        print(f"${user}: ", end="", flush=True)
+        print(f"${user}: ", end="")
 
     keyboard.add_hotkey("ctrl+l", clear)
 
     while True:
-        print(f"${user}: ", end="", flush=True)
+        print(f"${user}: ", end="")
         cmd: str = input().lower()
 
         if cmd == "dragoninstall":
@@ -173,7 +175,16 @@ def terminal() -> None:
                             user = newuser
                             print(f"User changed to {user}")
                             os.system(f"title Dragon OS - ${user}")
+                            with open("Files/config/core.json", "r+") as f:
+                                data: dict | list = json.load(f)
+                                data['CurrentUser'] = user
+                                f.seek(0)
+                                json.dump(data, f, indent=4)
+                                f.truncate()
+                                f.close()
                             break
+                f.close()
+
 
         elif cmd == "ls":
             print("dragoninstall", end="  ")
