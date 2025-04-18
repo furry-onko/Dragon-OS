@@ -1,6 +1,6 @@
-import json
-import sys
+# By Onko Aikuu :3
 import os
+os.system("py -m pip install subprocess")
 import subprocess
 
 os.chdir(os.getcwd())
@@ -32,15 +32,14 @@ print("""
 ⢽⡺⡦⣦⣢⢦⣤⣤⢼⣻⢄⡼⣺⣝⢿⣻⣿⡽⣟⣿⢶⢶⢴⣁⠢⡐⡩⢉⠍⡚⣫⣫⣷⢾⡽⣷⢿⣝⣼⡿⣻⣺⢽⢯⣻⡽⡽⣯⢾⣺
 ⢯⢯⢯⣞⢾⣝⣞⢾⢽⣺⢽⣝⢷⣝⢷⣝⡷⣟⣟⣿⣻⣿⣻⣯⡿⣷⢮⣶⣟⣿⣻⣽⡯⣿⣽⣟⣯⣟⣗⡯⣗⡯⣟⣽⣳⣻⡽⡯⣯⢷
 ⢽⢽⢵⡳⡯⣞⢾⢽⢽⣺⢽⣺⣳⣝⣗⣗⡯⣟⡾⡮⣗⡯⣟⡷⣿⣻⣯⣷⢿⢾⢯⡷⣻⣽⣺⣳⣳⣗⡯⣯⢯⣟⡽⣞⣗⣯⢯⡿⣽⣻
-⡽⣝⣗⡯⡯⡯⡯⡯⣗⡯⣗⣗⣗⣗⣗⣗⡯⣗⡯⡯⣗⡿⡽⣽⣝⣗⡷⣽⢽⢽⣳⣻⣳⣗⣯⣞⣗⡷⡯⡿⡽⣞⣯⣟⡾⡽⡯⣟⣗⣟
-""")
+⡽⣝⣗⡯⡯⡯⡯⡯⣗⡯⣗⣗⣗⣗⣗⣗⡯⣗⡯⡯⣗⡿⡽⣽⣝⣗⡷⣽⢽⢽⣳⣻⣳⣗⣯⣞⣗⡷⡯⡿⡽⣞⣯⣟⡾⡽⡯⣟⣗⣟""".center(os.get_terminal_size().columns))
 print("""
 ┳┓┳┓┏┓┏┓┏┓┳┓
 ┃┃┣┫┣┫┃┓┃┃┃┃
 ┻┛┛┗┛┗┗┛┗┛┛┗
-""")
+""".center(os.get_terminal_size().columns))
 
-print("Loading...")
+print("Loading... ".center(os.get_terminal_size().columns))
 
 dependencies: list = ["colorama", "keyboard", "requests", "json", "os", "sys", "bcrypt", "time", "windows-curses"]
 dependencies_count: int = len(dependencies)
@@ -64,6 +63,8 @@ from colorama import Fore, Style, Back, init
 import keyboard
 import requests
 import bcrypt
+import json
+import sys
 os.system("title Dragon OS - Importing Libraries... - Done")
 
 init(autoreset=True)

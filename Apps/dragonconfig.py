@@ -2,8 +2,8 @@ import json
 import sys
 import os
 import subprocess
-from colorama import Fore, Style, Back, init
 import curses as c
+from colorama import Fore, Style, Back, init
 from time import sleep
 
 init(autoreset=True)
@@ -64,21 +64,35 @@ def draw_popup(stdscr, option) -> None:
         popup_height = len(usernames) + 4
         start_y = height // 2 - popup_height // 2
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
-        popup.box()
-
-        popup.addstr(1, 2, option)
-
-        for idy, item in enumerate(usernames):
-            y: int = 2 + idy
-            popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
-        popup.refresh()
+        popup.keypad(True)
 
         while True:
+            popup.clear()
+            popup.box()
+            popup.addstr(1, 2, option)
+
+            for idy, item in enumerate(usernames):
+                y: int = 2 + idy
+                popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
+            
+            popup.refresh()
+
             key = popup.getch()
-            if key in [27, 10, 13]:
+            selected_user: str = usernames[selected]
+
+            if key == 27:
                 stdscr.clear()
                 stdscr.refresh()
                 break
+
+            elif key == c.KEY_DOWN:
+                selected = (selected +1) % len(usernames)
+
+            elif key == c.KEY_UP:
+                selected = (selected -1) % len(usernames)
+            
+        popup.clear()
+        popup.refresh()
 
     elif option == "System Information":
         ...
