@@ -148,6 +148,12 @@ def draw_popup(stdscr, option) -> None:
                                 popup.addstr(1, 2, user_options[selected], c.color_pair(1))
 
                                 textbox_win = popup.derwin(1, 30, 3, 2)
+                                textbox_win.clear()
+
+                                if selected_option == 0: textbox_win.bkgd(' ', c.color_pair(4))
+                                else: textbox_win.bkgd(' ', c.color_pair(0))
+
+                                textbox_win.addstr(0, 0, new_username)
 
                                 textbox_win.attron(c.A_NORMAL)
                                 textbox_win.refresh()
@@ -175,7 +181,7 @@ def draw_popup(stdscr, option) -> None:
                                         textbox_win.addstr(0, 0, new_username, c.color_pair(4))
                                         textbox_win.refresh
 
-                                        selected_option = 1
+                                        selected_option: int = 1
                                     elif key == c.KEY_UP:
                                         selected_option = (selected_option -1) %3
                                     elif key == c.KEY_DOWN:
@@ -203,8 +209,13 @@ def draw_popup(stdscr, option) -> None:
                                                 
                                             break
                                         else: break
-                                            
-                                            
+                                popup.clear()
+                                popup.box()
+                    elif key == 27:
+                        popup.clear()
+                        popup.box()
+                        popup.refresh()                        
+                        break
 
     elif option == "System Information":
         popup_height = len(sysinfo) + 4
