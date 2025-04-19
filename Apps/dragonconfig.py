@@ -2,6 +2,7 @@ import json
 import sys
 import os
 import subprocess
+import curses.textpad as ct
 import curses as c
 from colorama import Fore, Style, Back, init
 from time import sleep
@@ -13,6 +14,8 @@ def draw_popup(stdscr, option) -> None:
     c.start_color()
     c.init_pair(1, c.COLOR_MAGENTA, c.COLOR_BLACK)
     c.init_pair(2, c.COLOR_CYAN, c.COLOR_BLACK)
+    c.init_pair(3, c.COLOR_GREEN, c.COLOR_BLACK)
+    c.init_pair(4, c.COLOR_BLACK, c.COLOR_WHITE)
 
     are_you_sure: list = ["Yes", "No"]
     lang: list = ["English", "Polski", "Español"]
@@ -117,10 +120,91 @@ def draw_popup(stdscr, option) -> None:
                 selected = (selected -1) % len(usernames)
             
             elif key in [c.KEY_ENTER, 10, 13]:
-                # popup.clear()
-                # popup.box()
-                # for 
-                ...
+                popup.clear()
+                popup.box()
+                
+                while True:
+                    popup.addstr(1, 2, selected_user, c.color_pair(1))
+                    for idy, option in enumerate(user_options):
+                        y: int = 2 + idy
+                        popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {option}")
+                    popup.refresh()
+
+                    key = popup.getch()
+
+                    if key == c.KEY_UP:
+                        selected = (selected -1) % len(user_options)
+                    elif key == c.KEY_DOWN:
+                        selected = (selected +1) % len(user_options)
+                    elif key in [c.KEY_ENTER, 10, 13]:
+                        if selected == 0:
+                            selected_option: int = 0
+                            new_username: str = selected_user
+                            edit_mode = False
+
+                            while True:
+                                popup.clear()
+                                popup.box()
+                                popup.addstr(1, 2, user_options[selected], c.color_pair(1))
+
+                                textbox_win = popup.derwin(1, 30, 3, 2)
+
+                                textbox_win.attron(c.A_NORMAL)
+                                textbox_win.refresh()
+                                popup.refresh()
+                                textbox_win.bkgd(' ', c.color_pair(4))
+
+                                popup.addstr(5, 2, "[Save]", c.A_REVERSE if selected_option == 1 else c.A_NORMAL)
+                                popup.addstr(6, 2, "[Exit]", c.A_REVERSE if selected_option == 2 else c.A_NORMAL)
+                                popup.refresh()
+
+                                key = popup.getch()
+
+                                if selected_option == 0:
+                                    if key in [c.KEY_ENTER, 10, 13]:
+                                        textbox_win.bkgd(' ', c.color_pair(4))
+                                        textbox_win.refresh()
+                                        textbox = ct.Textbox(textbox_win)
+                                        c.curs_set(1)
+                                        new_username: str = textbox.edit().strip()
+                                        textbox_win.addstr(0, 0, new_username)
+                                        c.curs_set(0)
+
+                                        textbox_win.clear()
+                                        textbox_win.bkgd(' ', c.color_pair(4))
+                                        textbox_win.addstr(0, 0, new_username, c.color_pair(4))
+                                        textbox_win.refresh
+
+                                        selected_option = 1
+                                    elif key == c.KEY_UP:
+                                        selected_option = (selected_option -1) %3
+                                    elif key == c.KEY_DOWN:
+                                        selected_option = (selected_option +1) %3
+                                    
+                                    textbox_win.bkgd(' ', c.color_pair(4))
+                                    textbox_win.refresh()
+                                else:
+                                    if key == c.KEY_UP:
+                                        selected_option = (selected_option -1) %3
+                                    elif key == c.KEY_DOWN:
+                                        selected_option = (selected_option +1) %3
+                                    elif key in [c.KEY_ENTER, 10, 13]:
+                                        if selected_option == 1:
+                                            with open("Files/config/users.json", 'r') as f:
+                                                data: dict | list = json.load(f)
+                                                
+                                            for user in data['users']:
+                                                if user['user_name'] == selected_user:
+                                                    user['user_name'] = new_username
+                                                    break
+
+                                            with open("Files/config/users.json", 'w') as f:
+                                                json.dump(data, f, indent=4)
+                                                
+                                            break
+                                        else: break
+                                            
+                                            
 
     elif option == "System Information":
         popup_height = len(sysinfo) + 4
@@ -131,9 +215,7 @@ def draw_popup(stdscr, option) -> None:
         while True:
             popup.clear()
             popup.box()
-            popup.attron(c.color_pair(1))
-            popup.addstr(1, 2, option)
-            popup.attroff(c.color_pair(1))
+            popup.addstr(1, 2, option, c.color_pair(1))
 
             for idy, item in enumerate(sysinfo):
                 y: int = 2 + idy

@@ -1,6 +1,7 @@
 # By Onko Aikuu :3
 import os
 import sys
+os.system("cls" if os.name == "nt" else "clear")
 os.system("py -m pip install subprocess")
 import subprocess
 
@@ -43,8 +44,8 @@ dependencies: list = ["colorama", "keyboard", "requests", "json", "os", "sys", "
 
 for i, package in enumerate(dependencies):
     try:
-        os.system(f"title Dragon OS - Loading Libraries... {i}/{len(dependencies)}")
-        print(f"[\033[34mINFO\033[0m]      Loading libraries {i}/{len(dependencies)} ({package})", end="\r")
+        os.system(f"title Dragon OS - Loading Libraries... {i +1}/{len(dependencies)}")
+        print(f"[\033[34mINFO\033[0m]      Loading libraries {i +1}/{len(dependencies)} ({package})", end="\r")
         subprocess.call([sys.executable, "-m", "pip", "install", package], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print(" " * 50, end="\r")
 
