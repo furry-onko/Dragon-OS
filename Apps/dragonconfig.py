@@ -214,7 +214,7 @@ def draw_popup(stdscr, option) -> None:
                     elif key == 27:
                         popup.clear()
                         popup.box()
-                        popup.refresh()                        
+                        popup.refresh()
                         break
 
     elif option == "System Information":
