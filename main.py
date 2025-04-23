@@ -135,8 +135,8 @@ def terminal() -> None:
             break
         
         if cmd == "dragonconfig":
-            dc.execute()
-            break
+            try: dc.execute()
+            except Exception: print("")
 
         elif cmd == "exit":
             print("Exiting...")

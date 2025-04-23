@@ -9,6 +9,31 @@ from time import sleep
 
 init(autoreset=True)
 
+def options(popup, title: str, options: list):
+    selected_option: int = 0
+
+    while True:
+        popup.clear()
+        popup.box()
+        popup.addstr(1, 2, title, c.color_pair(1))
+
+        for idy, item in enumerate(options):
+            y: int = 2 + idy
+            popup.addstr(y, 2, f"[{'x' if idy == selected_option else ' '}] {item}")
+
+        key = popup.getch()
+
+        if key == c.KEY_DOWN:
+            selected_option = (selected_option - 1) % len(options)
+        elif key == c.KEY_UP:
+            selected_option = (selected_option + 1) % len(options)
+        elif key in [c.KEY_ENTER, 10, 13]:
+            popup.clear()
+            popup.box()
+            popup.refresh()
+            return options[selected_option]
+            break
+
 def edit_popup_field(popup, title: str, current_value: str, mask: bool = False, mask_char: str = '•') -> str | None:
     selected_option = 0
     new_value = current_value
@@ -239,6 +264,18 @@ def draw_popup(stdscr, option) -> None:
                             with open("Files/config/users.json", 'w') as f:
                                 json.dump(data, f, indent=4)
 
+                        elif sub_selected == 2:
+                            account_type: str = options(popup, option, ["Admin", "User"])
+                            with open("Files/config/users.json", 'r') as f:
+                                data: dict | list = json.load(f)
+                            
+                            for user in data['users']:
+                                if user['user_name'] == selected_user:
+                                    user['account_type'] = account_type.lower()
+                                    break
+
+                            with open("Files/config/users.json", 'w') as f:
+                                json.dump(data, f, indent=4)
 
                     elif key == 27:
                         popup.clear()
@@ -306,8 +343,15 @@ def draw_popup(stdscr, option) -> None:
         ...
     
     elif option == "Exit without saving":
-        ...
-    
+        popup = c.newwin(popup_height, popup_width, start_y, start_x)
+        popup.keypad(True)
+        ews = options(popup, f"{option} - Are you sure?", ["Yes", "No"])
+        if ews == "Yes":
+            raise Exception("exit")
+        else:
+            stdscr.clear()
+            stdscr.refresh()
+
     elif option == "Restore and exit":
         ...
     
