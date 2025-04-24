@@ -1,0 +1,18 @@
+{
+    "System": [
+        {"Language": "English"}
+    ],
+    "Options": [
+        {"Packages": []},
+        {"BootSequence": [
+            {"FastBoot": false},
+            {"SystemAutoStart": false},
+            {"PackageAutoUpdate": false}
+        ]},
+        {"Network": [
+            {"NetworkName": null},
+            {"NetworkPassw": null},
+            {"AutoReconnect": false}
+        ]}
+    ]
+}

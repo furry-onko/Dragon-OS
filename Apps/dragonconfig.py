@@ -346,8 +346,7 @@ def draw_popup(stdscr, option) -> None:
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
         popup.keypad(True)
         ews = options(popup, f"{option} - Are you sure?", ["Yes", "No"])
-        if ews == "Yes":
-            raise Exception("exit")
+        if ews == "Yes": raise Exception("exit")
         else:
             stdscr.clear()
             stdscr.refresh()
