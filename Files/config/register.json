@@ -1,16 +1,58 @@
 {
     "*": [
-        {"SYSTEM": [
-            {"Packages": [
+        {
+            "SYSTEM": [
                 {
-                "package_name": "System",
-                "package_desc": "DragonOS essentials",
-                "version": "dragon-v1.0",
-                "creator": "Onko Aikuu (@furry_onko)",
-                "enabled": true,
-                "attributes": ["SYS", "ND", "PKG", "NOM"]
+                    "Packages": [
+                        {
+                            "package_name": "System",
+                            "package_desc": "DragonOS essentials",
+                            "version": "dragon-v1.0",
+                            "creator": "Onko Aikuu (@furry_onko)",
+                            "enabled": true,
+                            "attributes": ["SYS", "ND", "PKG", "DOM"]
+                        },
+                        {
+                            "package_name": "Network Manager",
+                            "package_desc": "Network Manager for DragonOS",
+                            "version": "network-manager-v1.0",
+                            "creator": "Onko Aikuu (@furry_onko)",
+                            "enabled": true,
+                            "attributes": ["SYS", "PKG", "DOM"]
+                        }
+                    ],
+                    "SystemLang": "English"
                 }
-            ]}
-        ]}
+            ],
+            "MACHINE": [
+                {
+                    "BootSequence": [
+                        {
+                            "FastBoot": false,
+                            "SystemAutoStart": false,
+                            "PackageAutoUpdate": false
+                        }
+                    ]
+                },
+                {
+                    "Network": [
+                        {
+                            "Connected": {
+                                "NetworkName": null,
+                                "NetworkPassw": null,
+                                "AutoReconnect": false
+                            },
+                            "List": [
+                                {
+                                    "NetworkName": null,
+                                    "NetworkPassw": null,
+                                    "AutoReconnect": false
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }

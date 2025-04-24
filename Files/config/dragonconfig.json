@@ -3,16 +3,44 @@
         {"Language": "English"}
     ],
     "Options": [
-        {"Packages": []},
-        {"BootSequence": [
-            {"FastBoot": false},
-            {"SystemAutoStart": false},
-            {"PackageAutoUpdate": false}
-        ]},
-        {"Network": [
-            {"NetworkName": null},
-            {"NetworkPassw": null},
-            {"AutoReconnect": false}
-        ]}
+        {
+            "Packages": [
+                {
+                    "package_name": "System",
+                    "package_desc": "DragonOS essentials",
+                    "version": "dragon-v1.0",
+                    "creator": "Onko Aikuu (@furry_onko)",
+                    "enabled": true,
+                    "attributes": ["SYS", "ND", "PKG", "NOM"]
+                }
+            ]
+        },
+        {
+            "BootSequence": [
+                {
+                    "FastBoot": false,
+                    "SystemAutoStart": false,
+                    "PackageAutoUpdate": false
+                }
+            ]
+        },
+        {
+            "Network": [
+                {
+                    "Connected": {
+                        "NetworkName": null,
+                        "NetworkPassw": null,
+                        "AutoReconnect": false
+                    },
+                    "List": [
+                        {
+                            "NetworkName": null,
+                            "NetworkPassw": null,
+                            "AutoReconnect": false
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
