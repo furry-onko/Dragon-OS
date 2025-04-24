@@ -6,7 +6,7 @@
             "account_type": "admin"
         },
         {
-            "user_name": "onko",
+            "user_name": "furry_onko",
             "user_passw": "OwO",
             "account_type": "admin"
         },
@@ -24,6 +24,11 @@
             "user_name": "oil_up",
             "user_passw": "mrr",
             "account_type": "user"
+        },
+        {
+            "user_name": "epstein_island",
+            "user_passw": "minor_issue",
+            "account_type": "admin"
         }
     ]
 }
