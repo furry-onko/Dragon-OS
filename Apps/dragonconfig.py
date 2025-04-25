@@ -332,6 +332,11 @@ def draw_popup(stdscr, option) -> None:
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
         popup.keypad(True)
         result = options(popup, option, ["Package List", "Add Package", "Remove Package"])
+        
+        if result == "Package list":
+            with open("Files/config/register.json") as f:
+                register: dict = json.load(f)
+                packages = register["*"]["SYSTEM"]["Packages"]
     
     elif option == "Boot sequence":
         ...
