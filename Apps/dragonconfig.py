@@ -23,9 +23,9 @@ def options(popup, title: str, options: list):
 
         key = popup.getch()
 
-        if key == c.KEY_DOWN:
+        if key == c.KEY_UP:
             selected_option = (selected_option - 1) % len(options)
-        elif key == c.KEY_UP:
+        elif key == c.KEY_DOWN:
             selected_option = (selected_option + 1) % len(options)
         elif key in [c.KEY_ENTER, 10, 13]:
             popup.clear()
@@ -33,6 +33,7 @@ def options(popup, title: str, options: list):
             popup.refresh()
             return options[selected_option]
             break
+        elif key == 27: break
 
 def edit_popup_field(popup, title: str, current_value: str, mask: bool = False, mask_char: str = '•') -> str | None:
     selected_option = 0
@@ -328,7 +329,9 @@ def draw_popup(stdscr, option) -> None:
                 selected = (selected +1) % len(sysinfo)
     
     elif option == "Packages":
-        ...
+        popup = c.newwin(popup_height, popup_width, start_y, start_x)
+        popup.keypad(True)
+        result = options(popup, option, ["Package List", "Add Package", "Remove Package"])
     
     elif option == "Boot sequence":
         ...
