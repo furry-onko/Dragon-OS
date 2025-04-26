@@ -368,7 +368,6 @@ def draw_popup(stdscr, option) -> None:
         else:
             stdscr.clear()
             stdscr.refresh()
-        ...
 
     elif option == "Restore and exit":
         ...
