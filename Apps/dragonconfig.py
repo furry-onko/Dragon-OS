@@ -9,7 +9,7 @@ from time import sleep
 
 init(autoreset=True)
 
-def options(popup, title: str, options: list):
+def options(popup, title: str, options: list, control: str = None):
     selected_option: int = 0
 
     while True:
@@ -33,6 +33,15 @@ def options(popup, title: str, options: list):
             popup.refresh()
             return options[selected_option]
             break
+        elif key == 27:
+            popup.clear()
+            popup.box()
+            popup.refresh()
+            return
+            break
+
+        elif key == 81 and control == "q-crash":
+            raise ValueError("crash-forced dragonconfig")
 
 def edit_popup_field(popup, title: str, current_value: str, mask: bool = False, mask_char: str = '•') -> str | None:
     selected_option = 0
@@ -271,8 +280,10 @@ def draw_popup(stdscr, option) -> None:
                             
                             for user in data['users']:
                                 if user['user_name'] == selected_user:
-                                    user['account_type'] = account_type.lower()
-                                    break
+                                    try:
+                                        user['account_type'] = account_type.lower()
+                                        break
+                                    except: break
 
                             with open("Files/config/users.json", 'w') as f:
                                 json.dump(data, f, indent=4)
@@ -345,11 +356,12 @@ def draw_popup(stdscr, option) -> None:
     elif option == "Exit without saving":
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
         popup.keypad(True)
-        ews = options(popup, f"{option} - Are you sure?", ["Yes", "No"])
-        if ews == "Yes": raise Exception("exit")
+        ews = options(popup, f"{option} - Are you sure?", ["Yes", "No"], control="q-crash")
+        if ews == "Yes": raise ValueError("exit")
         else:
             stdscr.clear()
             stdscr.refresh()
+        ...
 
     elif option == "Restore and exit":
         ...

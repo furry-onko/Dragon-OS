@@ -2,10 +2,10 @@
 import os
 import sys
 os.system("cls" if os.name == "nt" else "clear")
-os.system("py -m pip install subprocess")
+os.system("py -m pip install --upgrade pip")
 import subprocess
 
-os.chdir(os.getcwd())
+os.chdir(os.path.dirname(__file__))
 os.system("title Dragon OS - Loading Libraries...")
 os.system("cls" if os.name == "nt" else "clear")
 
@@ -52,22 +52,27 @@ for i, package in enumerate(dependencies):
     except:
         print(f"[\033[0;31mERROR\033[0m]      Error loading library: {package}")
 
+print("[\033[34mINFO\033[0m]      Loading libraries - Done")
 os.system("title Dragon OS - Loading Libraries... - Done")
 
+print("[\033[34mINFO\033[0m]      Importing libraries", end="\r")
 os.system("title Dragon OS - Importing Libraries...")
 from Apps import dragoninstall as drg_inst
 from Apps import datetime as dt
 from Apps import dragonconfig as dc
 from System import dragon as drg
+from System import crash
 from colorama import Fore, Style, Back, init
 import keyboard
 import requests
 import bcrypt
 import json
+
+print(" " * 50, end="\r")
+print("[\033[34mINFO\033[0m]      Importing libraries - Done")
 os.system("title Dragon OS - Importing Libraries... - Done")
 
 init(autoreset=True)
-
 
 user: str = ""
 with open("Files/config/core.json", "r") as f:
@@ -114,7 +119,6 @@ def download() -> None:
         print(f"ERROR DOWNLOADING FILES: {x}")
         print("PLEASE CHECK YOUR INTERNET CONNECTION")
         print("OR CHECK YOUR FIREWALL SETTINGS")
-        # exit(-3)
 
 def terminal() -> None:
     global user
@@ -136,7 +140,15 @@ def terminal() -> None:
         
         if cmd == "dragonconfig":
             try: dc.execute()
-            except Exception: print("")
+            except ValueError as x:
+                x: list = str(x).split()
+
+                if x[0] == "exit":
+                    print("")
+
+                elif x[0] == "crash-forced":
+                    crash.crash(x)
+                
 
         elif cmd == "exit":
             print("Exiting...")
