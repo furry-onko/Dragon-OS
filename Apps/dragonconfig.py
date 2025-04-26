@@ -23,9 +23,9 @@ def options(popup, title: str, options: list, control: str = None):
 
         key = popup.getch()
 
-        if key == c.KEY_DOWN:
+        if key == c.KEY_UP:
             selected_option = (selected_option - 1) % len(options)
-        elif key == c.KEY_UP:
+        elif key == c.KEY_DOWN:
             selected_option = (selected_option + 1) % len(options)
         elif key in [c.KEY_ENTER, 10, 13]:
             popup.clear()
@@ -339,7 +339,14 @@ def draw_popup(stdscr, option) -> None:
                 selected = (selected +1) % len(sysinfo)
     
     elif option == "Packages":
-        ...
+        popup = c.newwin(popup_height, popup_width, start_y, start_x)
+        popup.keypad(True)
+        result = options(popup, option, ["Package List", "Add Package", "Remove Package"])
+        
+        if result == "Package list":
+            with open("Files/config/register.json") as f:
+                register: dict = json.load(f)
+                packages = register["*"]["SYSTEM"]["Packages"]
     
     elif option == "Boot sequence":
         ...
