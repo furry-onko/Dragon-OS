@@ -5,7 +5,9 @@ import subprocess
 import curses.textpad as ct
 import curses as c
 from colorama import Fore, Style, Back, init
-from time import sleep
+import time
+from datetime import datetime as dt
+from System import dragon as drg
 
 init(autoreset=True)
 
@@ -352,7 +354,40 @@ def draw_popup(stdscr, option) -> None:
         ...
     
     elif option == "Date / Time":
-        ...
+        in_date: bool = True
+        sel_date_opt: int = 0
+        sel_time_opt: int = 0
+        sel_exit_opt: int = 0
+
+        popup = c.newwin(popup_height, popup_width, start_y, start_x)
+        popup.keypad(True)
+    
+        now = dt.now()
+        current_hour: int = now.hour
+        current_min: int = now.minute
+        current_day: int = now.day
+        current_month: int = now.month
+        current_year: int = now.year
+
+        while True:
+            popup.addstr(1, 2, option, c.color_pair(1))
+            popup.box()
+            popup.refresh()
+
+            time: list = [current_hour, current_min]
+            date: list = [current_day, current_month, current_year]
+            datetime_exit: list = ["Save", "Exit"]
+            datetime_list: list = [date, time]
+
+            for idy, y_item in enumerate(datetime_list):
+                y: int = 2 + idy
+
+                for idx, x_item in enumerate(y_item):
+                    x: int = (idx +1) * 2
+                    popup.addstr(y, x, str(x_item))
+
+            key = popup.getch()
+            if key == 27: break
     
     elif option == "Network":
         ...
@@ -373,8 +408,7 @@ def draw_popup(stdscr, option) -> None:
         ...
     
     elif option == "Launch Dragon OS":
-        ...
-
+        raise ValueError("system execute")
 
 def draw_top_menu(stdscr, top, selected) -> None:
     for idx, item in enumerate(top):

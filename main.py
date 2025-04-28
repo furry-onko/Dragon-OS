@@ -40,7 +40,7 @@ print("┻┛┛┗┛┗┗┛┗┛┛┗".center(os.get_terminal_size().colum
 
 print("Loading... ".center(os.get_terminal_size().columns))
 
-dependencies: list = ["colorama", "keyboard", "requests", "json", "os", "sys", "bcrypt", "time", "windows-curses"]
+dependencies: list = ["colorama", "keyboard", "requests", "bcrypt",  "windows-curses"]
 
 for i, package in enumerate(dependencies):
     try:
@@ -141,13 +141,16 @@ def terminal() -> None:
         if cmd == "dragonconfig":
             try: dc.execute()
             except ValueError as x:
-                x: list = str(x).split()
+                x: str = str(x)
 
-                if x[0] == "exit":
+                if x == "exit":
                     print("")
 
-                elif x[0] == "crash-forced":
-                    crash.crash(x)
+                else:
+                    x: list = x.split(' ')
+
+                    if x[0] == "crash-forced":
+                        crash.crash(x)
                 
 
         elif cmd == "exit":
@@ -156,7 +159,6 @@ def terminal() -> None:
             
         elif cmd == "datetime":
             dt.execute()
-            break
 
         elif cmd == "dragon":
             drg.execute()
