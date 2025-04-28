@@ -126,7 +126,7 @@ def terminal() -> None:
 
     def clear() -> None:
         os.system("cls" if os.name == "nt" else "clear")
-        print(f"${user}: ", end="")
+        # print(f"${user}: ", end="")
 
     keyboard.add_hotkey("ctrl+l", clear)
 
@@ -141,17 +141,24 @@ def terminal() -> None:
         if cmd == "dragonconfig":
             try: dc.execute()
             except ValueError as x:
-                x: str = str(x)
+                full_exception: str = x
+                x: tuple = str(full_exception).split(' ')
 
-                if x == "exit":
+                if x[0] == "exit":
                     print("")
 
-                else:
-                    x: list = x.split(' ')
+                elif x[0] == "crash-forced":
+                    crash.crash(x)
 
-                    if x[0] == "crash-forced":
-                        crash.crash(x)
+                elif x[0] == "system":
+                    if x[1] == "install":
+                        drg_inst.execute()
+                        break
+                    else:
+                        drg.execute()
+                        break
                 
+                else: print(f"{Fore.YELLOW}Incorrect exception raised: {full_exception}\n")
 
         elif cmd == "exit":
             print("Exiting...")

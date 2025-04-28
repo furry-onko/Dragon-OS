@@ -11,14 +11,16 @@ def checkInstallation() -> bool:
         with open("Files/config/core.json", "r", encoding='utf-8') as f:
             json_data = json.load(f)
             system_installation: bool = json_data['SystemInstallation']
-            f.close()
             return system_installation
 
     except FileNotFoundError:
         with open("Files/config/core.json", "w", encoding='utf-8') as f:
-            json_data = {"SystemInstallation": False}
-            json.dump(json_data, f)
-            f.close()
+            json_data: dict = {
+                "SystemInstallation": False,
+                "CurrentUser: ": "root"
+            }
+            
+            json.dump(json_data, f, indent=4)
             return False
 
 def beginInstallation():
@@ -51,11 +53,10 @@ def beginInstallation():
 
 def execute():
     is_installed: bool = checkInstallation()
-    if is_installed == True:
+    if is_installed:
         print(Fore.GREEN + "System already installed.", end=" ")
         print("(", end="")
         print(Fore.BLACK + Style.BRIGHT + "Type 'dragon' to run the system.", end="")
         print(")")
     else:
         dconf.execute()
-        beginInstallation()

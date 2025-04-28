@@ -129,7 +129,7 @@ def draw_popup(stdscr, option) -> None:
     }
     bootseq: list = ["Enable FastBoot", "Disable FastBoot"]
 
-    user_options: list = ["Change username", "Change password", "Change account type", "Delete user", "Add a new user"]
+    user_options: list = ["Change username", "Change password", "Change account type", "Remove user", "Add a new user", "Choose user"]
 
     height, width = stdscr.getmaxyx()
     popup_width: int = 75
@@ -224,7 +224,12 @@ def draw_popup(stdscr, option) -> None:
             elif key in [c.KEY_ENTER, 10, 13]:
                 popup.clear()
                 popup.box()
-                
+
+                with open('Files/config/users.json', 'r') as f:
+                    json_data: dict = json.load(f)
+                    users: dict | list = json_data["users"]
+                    usernames: list = [user['user_name'] for user in users]
+
                 while True:
                     popup.addstr(1, 2, selected_user, c.color_pair(1))
                     for idy, option in enumerate(user_options):
@@ -260,7 +265,7 @@ def draw_popup(stdscr, option) -> None:
 
                             for user in data['users']:
                                 if user['user_name'] == selected_user:
-                                    display_password: str = user['user_passw']
+                                    display_password: str = user['user_passw'] or ""
                                     break
 
                             new_password = edit_popup_field(popup, "Change Password", display_password, mask=True)
@@ -290,6 +295,18 @@ def draw_popup(stdscr, option) -> None:
                             with open("Files/config/users.json", 'w') as f:
                                 json.dump(data, f, indent=4)
 
+                        elif sub_selected == 3:
+                            delete_check = options(popup, "Remove user", ["No", "Yes"])
+                            if delete_check == "Yes":
+                                with open("Files/config/users.json", 'r') as f:
+                                    data: dict | list = json.load(f)
+                                
+                                for index, user in enumerate(data['users']):
+                                    if user['user_name'] == selected_user:
+                                        del data['users'][index]
+                                
+                                with open("Files/config/users.json", 'w') as f:
+                                    json.dump(data, f, indent=4)
                     elif key == 27:
                         popup.clear()
                         popup.box()
@@ -408,7 +425,12 @@ def draw_popup(stdscr, option) -> None:
         ...
     
     elif option == "Launch Dragon OS":
-        raise ValueError("system execute")
+        with open("Files/config/core.json", 'r') as f:
+            data: dict | list = json.load(f)
+        
+        system_installation: bool = data['SystemInstallation']
+        if system_installation: raise ValueError("system execute")
+        else: raise ValueError("system install")
 
 def draw_top_menu(stdscr, top, selected) -> None:
     for idx, item in enumerate(top):
