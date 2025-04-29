@@ -29,8 +29,9 @@
                             "attributes": ["SYS", "ND", "PKG", "DOM"]
                         }
                     ],
-                    "SystemLang": "English"
-                }
+                    "PackageSettings": []
+                },
+                {"SystemLang": "English"}
             ],
             "MACHINE": [
                 {

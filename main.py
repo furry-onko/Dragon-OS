@@ -34,9 +34,14 @@ print("⢽⡺⡦⣦⣢⢦⣤⣤⢼⣻⢄⡼⣺⣝⢿⣻⣿⡽⣟⣿⢶⢶⢴⣁�
 print("⢯⢯⢯⣞⢾⣝⣞⢾⢽⣺⢽⣝⢷⣝⢷⣝⡷⣟⣟⣿⣻⣿⣻⣯⡿⣷⢮⣶⣟⣿⣻⣽⡯⣿⣽⣟⣯⣟⣗⡯⣗⡯⣟⣽⣳⣻⡽⡯⣯⢷".center(os.get_terminal_size().columns))
 print("⢽⢽⢵⡳⡯⣞⢾⢽⢽⣺⢽⣺⣳⣝⣗⣗⡯⣟⡾⡮⣗⡯⣟⡷⣿⣻⣯⣷⢿⢾⢯⡷⣻⣽⣺⣳⣳⣗⡯⣯⢯⣟⡽⣞⣗⣯⢯⡿⣽⣻".center(os.get_terminal_size().columns))
 print("⡽⣝⣗⡯⡯⡯⡯⡯⣗⡯⣗⣗⣗⣗⣗⣗⡯⣗⡯⡯⣗⡿⡽⣽⣝⣗⡷⣽⢽⢽⣳⣻⣳⣗⣯⣞⣗⡷⡯⡿⡽⣞⣯⣟⡾⡽⡯⣟⣗⣟".center(os.get_terminal_size().columns))
-print("┳┓┳┓┏┓┏┓┏┓┳┓".center(os.get_terminal_size().columns))
-print("┃┃┣┫┣┫┃┓┃┃┃┃".center(os.get_terminal_size().columns))
-print("┻┛┛┗┛┗┗┛┗┛┛┗".center(os.get_terminal_size().columns))
+print()
+print("    ____                               ____  _____".center(os.get_terminal_size().columns))
+print("   / __ \_________ _____ _____  ____  / __ \/ ___/".center(os.get_terminal_size().columns))
+print("  / / / / ___/ __ `/ __ `/ __ \/ __ \/ / / /\__ \ ".center(os.get_terminal_size().columns))
+print(" / /_/ / /  / /_/ / /_/ / /_/ / / / / /_/ /___/ / ".center(os.get_terminal_size().columns))
+print("/_____/_/   \__,_/\__, /\____/_/ /_/\____//____/  ".center(os.get_terminal_size().columns))
+print("                 /____/                           ".center(os.get_terminal_size().columns))
+print("\n")
 
 print("Loading... ".center(os.get_terminal_size().columns))
 

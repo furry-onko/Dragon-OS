@@ -11,16 +11,21 @@ from System import dragon as drg
 
 init(autoreset=True)
 
-def options(popup, title: str, options: list, control: str = None):
+def options(popup, title: str, options: list | tuple, control: str = None, text: list | tuple = None):
     selected_option: int = 0
 
     while True:
         popup.clear()
         popup.box()
         popup.addstr(1, 2, title, c.color_pair(1))
+        
+        if text:
+            for i, line in enumerate(text):
+                txt_y: int = 2 +i
+                popup.addstr(txt_y, 2, line)
 
         for idy, item in enumerate(options):
-            y: int = 2 + idy
+            y: int = (len(text) + idy if text else 2 + idy)
             popup.addstr(y, 2, f"[{'x' if idy == selected_option else ' '}] {item}")
 
         key = popup.getch()
@@ -153,29 +158,20 @@ def draw_popup(stdscr, option) -> None:
         start_y = height // 2 - popup_height // 2
         popup = c.newwin(popup_height, popup_width, start_y, start_x)
         popup.keypad(True)
-
-        while True:
-            popup.clear()
-            popup.box()
-            popup.addstr(1, 2, option)
-
-            for idy, item in enumerate(lang):
-                y: int = 2 + idy
-                popup.addstr(y, 2, f"[{'x' if idy == selected else ' '}] {item}")
-
-            popup.refresh()
-
-            key = popup.getch()
-            if key == 27:
-                stdscr.clear()
-                stdscr.refresh()
-                break
+        selected_language: str = options(popup, option, lang)
+        with open("Files/config/register.json", 'r') as f:
+            system_lang: str = json.load(f)['*'][0]['SYSTEM'][1]['SystemLang']
+        
+        if selected_language:
+            system_lang = selected_language
+            if selected_language == "English":
+                options(popup, "Notice", ["OK"], text=("Language works only on the system UI,", "not dragonconfig."))
             
-            elif key == c.KEY_DOWN:
-                selected = (selected +1) % len(lang)
-            
-            elif key == c.KEY_UP:
-                selected = (selected -1) % len(lang)
+            elif selected_language == "Polski":
+                options(popup, "Uwaga", ["OK"], text=("Wybrany język działa tylko w warstwie zewnętrznej systemu,", "nie w dragonconfig."))
+
+            elif selected_language == "Español":
+                options(popup, "Notar", ["OK"], text=("El idioma solo funciona en la interfaz de usuario del sistema,", "no en dragonconfig."))
 
     elif option == "Users":
         with open('Files/config/users.json', 'r') as f:
