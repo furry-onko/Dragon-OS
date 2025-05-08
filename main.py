@@ -65,6 +65,7 @@ os.system("title Dragon OS - Importing Libraries...")
 from Apps import dragoninstall as drg_inst
 from Apps import datetime as dt
 from Apps import dragonconfig as dc
+from Apps import tests
 from System import dragon as drg
 from System import crash
 from colorama import Fore, Style, Back, init
@@ -168,6 +169,9 @@ def terminal() -> None:
         elif cmd == "exit":
             print("Exiting...")
             break
+        
+        elif cmd == "test":
+            tests.test()
             
         elif cmd == "datetime":
             dt.execute()
