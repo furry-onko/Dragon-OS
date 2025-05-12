@@ -11,7 +11,7 @@ from System import dragon as drg
 
 init(autoreset=True)
 
-def options(popup, title: str, options: list | tuple, control: str = None, text: list | tuple = None):
+def options(popup, title: str, options: list | tuple, control: str = None, text: list | tuple = None) -> str | None:
     selected_option: int = 0
 
     while True:
@@ -49,6 +49,43 @@ def options(popup, title: str, options: list | tuple, control: str = None, text:
 
         elif key == 81 and control == "q-crash":
             raise ValueError("crash-forced dragonconfig")
+
+def info(popup, title: str, select_options: list | tuple, text_options: list | tuple) -> str | None:
+    selected_option: int = 0
+
+    if select_options:
+        select_options_result: str = options(popup, title, select_options)
+    
+    if text_options:
+        while True:
+            popup.clear()
+            popup.box()
+            
+            if not select_options_result:
+                popup.addstr(1, 2, title, c.color_pair(1))
+            
+            for idy, item in enumerate(text_options):
+                y: int = (2 + idy)
+                popup.addstr(y, 2, item)
+
+            key = popup.getch()
+
+            if key == c.KEY_UP:
+                selected_option = (selected_option - 1) % len(options)
+            elif key == c.KEY_DOWN:
+                selected_option = (selected_option + 1) % len(options)
+            elif key in [c.KEY_ENTER, 10, 13]:
+                popup.clear()
+                popup.box()
+                popup.refresh()
+                return select_options_result
+                break
+            elif key == 27:
+                popup.clear()
+                popup.box()
+                popup.refresh()
+                return
+                break
 
 def edit_popup_field(popup, title: str, current_value: str, mask: bool = False, mask_char: str = '•') -> str | None:
     selected_option = 0
@@ -358,11 +395,47 @@ def draw_popup(stdscr, option) -> None:
         popup.keypad(True)
         result = options(popup, option, ["Package List", "Add Package", "Remove Package"])
         
-        if result == "Package list":
-            with open("Files/config/register.json") as f:
-                register: dict = json.load(f)
-                packages = register["*"]["SYSTEM"]["Packages"]
-    
+        if result == "Package List": ##########################################################################################################################
+            with open("Files/config/register.json", 'r') as f:
+                packages: dict | list = json.load(f)["*"][0]["SYSTEM"][0]["Packages"]
+
+            packages_popup = c.newwin(popup_height, popup_width, start_y, start_x)
+            packages_popup.keypad(True)
+
+            package_names: list = []
+
+            for package in packages:
+                package_names.append(
+                    package['package_name']
+                )
+                if package['enabled']:
+                    is_enabled = 'Enabled'
+                else:
+                    is_enabled = 'Disabled'
+
+            selected_package = options(packages_popup, result, [*package_names, 'Back'])
+
+            if selected_package != 'Back':
+                for package in packages:
+                    if package['package_name'] == selected_package:
+                        package_info_box = info(packages_popup, selected_package, ['Attributes'], [
+                            is_enabled,
+                            f"Name: {package['package_name']}",
+                            f"Description: {package['package_desc']}",
+                            f"Version: {package['version']}",
+                            f"Creator: {package['creator']}",
+                        ])
+                    if package_info_box == "Attributes":
+                        attr_names: list = []
+
+                        for attr in package['attributes']:
+                            if attr == "SYS": attr_names.append("System critical")
+                            elif attr == "ND": attr_names.append("Cannot delete")
+                            elif attr == "DOM": attr_names.append("Immutable")
+                            elif attr == "PKG": attr_names.append("Package")
+                            else: attr_names.append("Unknown attribute")
+                        package_attributes = info(packages_popup, f"{selected_package} - Attributes", ['Back'], [*attr_names])
+
     elif option == "Boot sequence":
         ...
     
