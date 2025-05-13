@@ -8,6 +8,7 @@ from colorama import Fore, Style, Back, init
 import time
 from datetime import datetime as dt
 from System import dragon as drg
+import requests as req
 
 init(autoreset=True)
 
@@ -50,42 +51,42 @@ def options(popup, title: str, options: list | tuple, control: str = None, text:
         elif key == 81 and control == "q-crash":
             raise ValueError("crash-forced dragonconfig")
 
-def info(popup, title: str, select_options: list | tuple, text_options: list | tuple) -> str | None:
+def info(popup, title: str, select_options: list | tuple = None, text_options: list | tuple = None) -> str | None:
     selected_option: int = 0
+    y: int = 0
 
-    if select_options:
-        select_options_result: str = options(popup, title, select_options)
-    
-    if text_options:
-        while True:
+    while True:
+        popup.clear()
+        popup.box()
+        popup.addstr(1, 2, title, c.color_pair(1))
+
+        #add text
+        for idy, item in enumerate(text_options):
+            y = 2 + idy
+            popup.addstr(y, 2, item)
+
+        for idy, item in enumerate(select_options):
+            y = 2 + idy + len(text_options)
+            popup.addstr(y, 2, f"[{'x' if idy == selected_option else ' '}] {item}")
+
+        key = popup.getch()
+
+        if key == c.KEY_UP:
+            selected_option = (selected_option - 1) % len(select_options)
+        elif key == c.KEY_DOWN:
+            selected_option = (selected_option + 1) % len(select_options)
+        elif key in [c.KEY_ENTER, 10, 13]:
             popup.clear()
             popup.box()
-            
-            if not select_options_result:
-                popup.addstr(1, 2, title, c.color_pair(1))
-            
-            for idy, item in enumerate(text_options):
-                y: int = (2 + idy)
-                popup.addstr(y, 2, item)
-
-            key = popup.getch()
-
-            if key == c.KEY_UP:
-                selected_option = (selected_option - 1) % len(options)
-            elif key == c.KEY_DOWN:
-                selected_option = (selected_option + 1) % len(options)
-            elif key in [c.KEY_ENTER, 10, 13]:
-                popup.clear()
-                popup.box()
-                popup.refresh()
-                return select_options_result
-                break
-            elif key == 27:
-                popup.clear()
-                popup.box()
-                popup.refresh()
-                return
-                break
+            popup.refresh()
+            return select_options[selected_option]
+            break
+        elif key == 27:
+            popup.clear()
+            popup.box()
+            popup.refresh()
+            return
+            break
 
 def edit_popup_field(popup, title: str, current_value: str, mask: bool = False, mask_char: str = '•') -> str | None:
     selected_option = 0
@@ -169,7 +170,8 @@ def draw_popup(stdscr, option) -> None:
         "Version": ["Dragon OS v1.0"],
         "Contact": ["GitHub: @furry-onko", "Telegram, Instagram, etc: @furry_onko"]
     }
-    bootseq: list = ["Enable FastBoot", "Disable FastBoot"]
+    bootseq: list = ["Enable FastBoot", "Disable FastBoot", "About FastBoot"]
+    abt_fastboot: list = ["FastBoot lets you skip installing all packages.", "Packages will be updated once in a month"]
 
     user_options: list = ["Change username", "Change password", "Change account type", "Remove user", "Add a new user", "Choose user"]
 
@@ -395,46 +397,70 @@ def draw_popup(stdscr, option) -> None:
         popup.keypad(True)
         result = options(popup, option, ["Package List", "Add Package", "Remove Package"])
         
-        if result == "Package List": ##########################################################################################################################
-            with open("Files/config/register.json", 'r') as f:
-                packages: dict | list = json.load(f)["*"][0]["SYSTEM"][0]["Packages"]
+        if result == "Package List":
+            while True:
+                with open("Files/config/register.json", 'r') as f:
+                    packages: dict | list = json.load(f)["*"][0]["SYSTEM"][0]["Packages"]
 
-            packages_popup = c.newwin(popup_height, popup_width, start_y, start_x)
-            packages_popup.keypad(True)
+                packages_popup = c.newwin(popup_height, popup_width, start_y, start_x)
+                packages_popup.keypad(True)
 
-            package_names: list = []
+                package_names: list = []
 
-            for package in packages:
-                package_names.append(
-                    package['package_name']
-                )
-                if package['enabled']:
-                    is_enabled = 'Enabled'
-                else:
-                    is_enabled = 'Disabled'
-
-            selected_package = options(packages_popup, result, [*package_names, 'Back'])
-
-            if selected_package != 'Back':
                 for package in packages:
-                    if package['package_name'] == selected_package:
-                        package_info_box = info(packages_popup, selected_package, ['Attributes'], [
-                            is_enabled,
-                            f"Name: {package['package_name']}",
-                            f"Description: {package['package_desc']}",
-                            f"Version: {package['version']}",
-                            f"Creator: {package['creator']}",
-                        ])
-                    if package_info_box == "Attributes":
-                        attr_names: list = []
+                    package_names.append(
+                        package['package_name']
+                    )
+                    if package['enabled']:
+                        is_enabled = 'Enabled'
+                    else:
+                        is_enabled = 'Disabled'
 
-                        for attr in package['attributes']:
-                            if attr == "SYS": attr_names.append("System critical")
-                            elif attr == "ND": attr_names.append("Cannot delete")
-                            elif attr == "DOM": attr_names.append("Immutable")
-                            elif attr == "PKG": attr_names.append("Package")
-                            else: attr_names.append("Unknown attribute")
-                        package_attributes = info(packages_popup, f"{selected_package} - Attributes", ['Back'], [*attr_names])
+                selected_package = options(packages_popup, result, [*package_names, 'Back'])
+
+                if selected_package != 'Back':
+                    for package in packages:
+                        if package['package_name'] == selected_package:
+                            package_info_box = c.newwin(popup_height, popup_width, start_y, start_x)
+                            package_info = info(packages_popup, selected_package, ['Attributes'], [
+                                is_enabled,
+                                f"Name: {package['package_name']}",
+                                f"Description: {package['package_desc']}",
+                                f"Version: {package['version']}",
+                                f"Creator: {package['creator']}",
+                            ])
+                            if package_info == "Attributes":
+                                attr_names: list = []
+
+                                for attr in package['attributes']:
+                                    if attr == "SYS": attr_names.append("System critical")
+                                    elif attr == "ND": attr_names.append("Cannot delete")
+                                    elif attr == "DOM": attr_names.append("Immutable")
+                                    elif attr == "PKG": attr_names.append("Package")
+                                    else: attr_names.append("Unknown attribute")
+
+                                package_attr_box = c.newwin(popup_height, popup_width, start_y, start_x)
+                                package_attributes = info(package_attr_box, f"{selected_package} - Attributes", ['Back'], [*attr_names])
+                else: break
+        elif result == "Add Package":
+            package_name: str = edit_popup_field(popup, "Package name", result)
+            if package_name:
+                package_list_raw: str = req.get("https://raw.githubusercontent.com/furry-onko/furry-onko/refs/heads/main/dragon/package-list.json")
+                package_list: dict = package_list_raw.json()
+                package_names: list = []
+
+                for index, package in enumerate(package_list):
+                    package_names.append(
+                        package[0][0]  ##############################################
+                    )
+                
+                if package_name in package_names:
+                    ...
+                
+                else:
+                    err_popup = c.newwin(popup_height, popup_width, start_y, start_x)
+                    options(err_popup, f"Package \"{package_name}\" not found", ["OK"])
+                
 
     elif option == "Boot sequence":
         ...
