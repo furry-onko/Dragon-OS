@@ -445,17 +445,24 @@ def draw_popup(stdscr, option) -> None:
         elif result == "Add Package":
             package_name: str = edit_popup_field(popup, "Package name", result)
             if package_name:
-                package_list_raw: str = req.get("https://raw.githubusercontent.com/furry-onko/furry-onko/refs/heads/main/dragon/package-list.json")
-                package_list: dict = package_list_raw.json()
+                package_list_raw: str = req.get("https://raw.githubusercontent.com/furry-onko/furry-onko/refs/heads/main/dragon/package-list.json", headers={"User-Agent": "Mozilla/5.0"})
+                package_list: dict = package_list_raw.json()["Packages"]
                 package_names: list = []
 
                 for index, package in enumerate(package_list):
                     package_names.append(
-                        package[0][0]  ##############################################
+                        package[0]
                     )
                 
                 if package_name in package_names:
-                    ...
+                    # ckeck if package is in installed
+                    for package_name_check in package['package_name']:
+                        if package_name == package_name_check:
+                            err_popup = c.newwin(popup_height, popup_width, start_y, start_x)
+                            options(err_popup, f"Package \"{package_name}\" is already installed.", ["OK"])
+                    
+                    pkg_found = c.newwin(popup_height, popup_width, start_y, start_x)
+                    options(pkg_found, f"Package {package_name} found", ["OK"])
                 
                 else:
                     err_popup = c.newwin(popup_height, popup_width, start_y, start_x)

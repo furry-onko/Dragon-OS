@@ -88,17 +88,18 @@ with open("Files/config/core.json", "r") as f:
 
 def download() -> None:
     try:
+        headers: dict = {"User-Agent": "Mozilla/5.0"}
         download_core_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/core.json"
         download_users_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Files/config/users.json"
         download_dragoninstall_link: str = "https://raw.githubusercontent.com/furry-onko/Dragon-OS/refs/heads/main/Apps/dragoninstall.py" 
 
-        download_core_response = requests.get(download_core_link)
+        download_core_response = requests.get(download_core_link, headers=headers)
         download_core_response.raise_for_status()
 
-        download_users_response = requests.get(download_users_link)
+        download_users_response = requests.get(download_users_link, headers=headers)
         download_users_response.raise_for_status()
 
-        download_dragoninstall_response = requests.get(download_dragoninstall_link)
+        download_dragoninstall_response = requests.get(download_dragoninstall_link, headers=headers)
         download_dragoninstall_response.raise_for_status()
 
         os.makedirs("Files/config", exist_ok=True)
