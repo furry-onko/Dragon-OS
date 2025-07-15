@@ -7,7 +7,7 @@ import curses as c
 from colorama import Fore, Style, Back, init
 import time
 from datetime import datetime as dt
-from System import dragon as drg
+from System import system as drg
 import requests as req
 
 init(autoreset=True)
@@ -267,18 +267,33 @@ def draw_popup(stdscr, option) -> None:
 
                 while True:
                     popup.addstr(1, 2, selected_user, c.color_pair(1))
-                    for idy, option in enumerate(user_options):
-                        y: int = 2 + idy
-                        popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
-                    popup.refresh()
+                    if selected_user == "root":
+                        for idy, option in enumerate(user_options[4:]):
+                            y: int = 2 + idy
+                            popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
+                        popup.refresh()
+                    else:
+                        for idy, option in enumerate(user_options):
+                            y: int = 2 + idy
+                            popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
+                        popup.refresh()
 
                     key = popup.getch()
                     
                     if key == c.KEY_UP:
-                        sub_selected = (sub_selected -1) % len(user_options)
+                        if selected_user == "root":
+                            sub_selected = (sub_selected -1) % 2
+                        else:
+                            sub_selected = (sub_selected -1) % len(user_options)
                     elif key == c.KEY_DOWN:
-                        sub_selected = (sub_selected +1) % len(user_options)
+                        if selected_user == "root":
+                            sub_selected = (sub_selected +1) % 2
+                        else:
+                            sub_selected = (sub_selected +1) % len(user_options)
                     elif key in [c.KEY_ENTER, 10, 13]:
+                        if selected_user == "root":
+                            sub_selected += 3
+
                         if sub_selected == 0:
                             new_username = edit_popup_field(popup, "Change Username", selected_user)
                             if new_username:
@@ -342,6 +357,10 @@ def draw_popup(stdscr, option) -> None:
                                 
                                 with open("Files/config/users.json", 'w') as f:
                                     json.dump(data, f, indent=4)
+                        
+                        elif sub_selected == 4:
+                            ...
+
                     elif key == 27:
                         popup.clear()
                         popup.box()

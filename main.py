@@ -106,7 +106,7 @@ from Apps import dragoninstall as drg_inst
 from Apps import datetime as dt
 from Apps import dragonconfig as dc
 from Apps import tests
-from System import dragon as drg
+from System import system as drg
 from System import crash
 from colorama import Fore, Style, Back, init
 import keyboard
