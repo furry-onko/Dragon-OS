@@ -11,19 +11,9 @@
             "account_type": "admin"
         },
         {
-            "user_name": "dupa",
-            "user_passw": "xddd",
-            "account_type": "user"
-        },
-        {
             "user_name": "zryt",
             "user_passw": "szalom",
             "account_type": "user"
-        },
-        {
-            "user_name": "epstein",
-            "user_passw": "minor_issue",
-            "account_type": "admin"
         }
     ]
 }

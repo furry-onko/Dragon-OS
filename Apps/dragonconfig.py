@@ -317,7 +317,10 @@ def draw_popup(stdscr, option) -> None:
             selected_user: str = usernames[selected]
 
             if key == 27:
-                stdscr.clear()
+                popup.clear()
+                popup.refresh()
+                del popup
+                stdscr.touchwin()
                 stdscr.refresh()
                 break
 
@@ -330,33 +333,38 @@ def draw_popup(stdscr, option) -> None:
             elif key in [c.KEY_ENTER, 10, 13]:
                 popup.clear()
                 popup.box()
-
-                """ potential repetition
-                with open('Files/config/users.json', 'r') as f:
-                    json_data: dict = json.load(f)
-                    users: dict | list = json_data["users"]
-                    usernames: list = [user['user_name'] for user in users]
-                """
+                popup.refresh()
 
                 while True:
+                    popup_height = len(user_options[4:] if selected_user == "root" else user_options) + 4
+                    # Before creating a new popup, clear and refresh the previous popup to make it disappear
+                    popup.clear()
+                    popup.refresh()
+
+                    start_y = height // 2 - popup_height // 2
+                    usr_opt_popup = c.newwin(popup_height, popup_width, start_y, start_x)
+                    usr_opt_popup.keypad(True)
+                    usr_opt_popup.clear()
+                    usr_opt_popup.box()
+
                     # Add user control popup
-                    popup.addstr(1, 2, selected_user, c.color_pair(1))
+                    usr_opt_popup.addstr(1, 2, selected_user, c.color_pair(1))
 
                     # Disable options that could destroy root
                     if selected_user == "root":
                         for idy, option in enumerate(user_options[4:]):
                             y: int = 2 + idy
-                            popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
-                        popup.refresh()
+                            usr_opt_popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
+                        usr_opt_popup.refresh()
 
                     # Options for every user
                     else:
                         for idy, option in enumerate(user_options):
                             y: int = 2 + idy
-                            popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
-                        popup.refresh()
+                            usr_opt_popup.addstr(y, 2, f"[{'x' if idy == sub_selected else ' '}] {option}")
+                        usr_opt_popup.refresh()
 
-                    key = popup.getch()
+                    key = usr_opt_popup.getch()
                     
                     # Controls for selected root and every other account
                     if key == c.KEY_UP:
@@ -376,8 +384,15 @@ def draw_popup(stdscr, option) -> None:
                         # Option for changing user name
                         if sub_selected == 0:
                             # Get username
-                            new_username = edit_popup_field(popup, "Change Username", selected_user)
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            new_username = edit_popup_field(usr_opt_popup, "Change Username", selected_user)
                             
+                            # After returning from popup, clear user options popup
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            del usr_opt_popup
+
                             if new_username:
                                 # Load users
                                 with open("Files/config/users.json", 'r') as f:
@@ -393,10 +408,12 @@ def draw_popup(stdscr, option) -> None:
                                 with open("Files/config/users.json", 'w') as f:
                                     json.dump(data, f, indent=4)
                             # Exit if empty username
-                            else: break
+                            break
 
                         # Option for changing user password
                         elif sub_selected == 1:
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
                             # Load data
                             with open("Files/config/users.json", 'r') as f:
                                 data: dict | list = json.load(f)
@@ -408,7 +425,12 @@ def draw_popup(stdscr, option) -> None:
                                     break
 
                             # Add popup for changing password
-                            new_password = edit_popup_field(popup, "Change Password", display_password, mask=True)
+                            new_password = edit_popup_field(usr_opt_popup, "Change Password", display_password, mask=True)
+
+                            # After returning from popup, clear user options popup
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            del usr_opt_popup
                             
                             # Set password    
                             for user in data['users']:
@@ -419,11 +441,20 @@ def draw_popup(stdscr, option) -> None:
                             # Save a new password to file
                             with open("Files/config/users.json", 'w') as f:
                                 json.dump(data, f, indent=4)
+                            break
 
                         # Option for changing account type
                         elif sub_selected == 2:
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
                             # Get account type from popup
-                            account_type: str = options(popup, option, ["Admin", "User"])
+                            account_type: str = options(usr_opt_popup, option, ["Admin", "User"])
+
+                            # After returning from popup, clear user options popup
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            del usr_opt_popup
+
                             with open("Files/config/users.json", 'r') as f:
                                 data: dict | list = json.load(f)
                             
@@ -438,11 +469,19 @@ def draw_popup(stdscr, option) -> None:
                             # Save to file
                             with open("Files/config/users.json", 'w') as f:
                                 json.dump(data, f, indent=4)
+                            break
 
                         # Option for removing user
                         elif sub_selected == 3:
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
                             # Get confirmation from popup
-                            delete_check = options(popup, "Remove user", ["No", "Yes"])
+                            delete_check = options(usr_opt_popup, "Remove user", ["No", "Yes"])
+
+                            # After returning from popup, clear user options popup
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            del usr_opt_popup
                             
                             # If returned "Yes"
                             if delete_check == "Yes":
@@ -458,15 +497,26 @@ def draw_popup(stdscr, option) -> None:
                                 # Save to file
                                 with open("Files/config/users.json", 'w') as f:
                                     json.dump(data, f, indent=4)
+                            break
                         
                         elif sub_selected == 4:
-                            ...
+                            usr_opt_popup.clear()
+                            usr_opt_popup.refresh()
+                            del usr_opt_popup
+                            break
 
                     # Exit popup on esc
                     elif key == 27:
-                        popup.clear()
-                        popup.box()
-                        popup.refresh()
+                        usr_opt_popup.clear()
+                        usr_opt_popup.refresh()
+                        del usr_opt_popup
+                        # Redraw stdscr menu after closing usr_opt_popup
+                        stdscr.clear()
+                        # Redraw the main menu UI immediately
+                        draw_top_menu(stdscr, ["System", "Options", "Exit"], 0)
+                        submenu = ["Language", "Users", "System Information"]
+                        draw_sub_menu(stdscr, submenu, 0)
+                        stdscr.refresh()
                         break
 
     # System information interaction
