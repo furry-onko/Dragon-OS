@@ -5,7 +5,7 @@ def checkRoot() -> None:
 	path: str = os.path.dirname(__file__) + "/.."
 	folders: list = [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
 	folders = sorted(folders)
-	req_folders: tuple = ("bin", "boot", "const", "dev", "dsr", "home", "reg", "root", "sbin", "sys", "var")
+	req_folders: tuple = (".git", "bin", "boot", "const", "dev", "dsr", "home", "reg", "root", "sbin", "sys", "var")
 
 	if len(folders) != len(req_folders):
 		print("\033[0;31mError IERR_1: Number of folders in root directory are not equal to number of folders that are expected")

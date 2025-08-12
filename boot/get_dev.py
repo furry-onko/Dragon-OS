@@ -1,50 +1,92 @@
 import usb.core
 import usb.util
-import json
-from bin import colors as c
+import os, sys, json
+from bin.termUtil import colors as c
 from boot import dragonKernel
 
-devices: list = []
+usb_dev_obj:			list = []
+usb_dev_vendors:		list = []
+usb_dev_names:			list = []
+usb_dev_serial_numbers: list = []
+usb_dev_data:			list = []
 
-dev_vendors: list = []
-dev_names: list = []
-dev_serial_numbers: list = []
+pci_dev_obj: 			list = []
+pci_dev_vendors: 		list = []
+pci_dev_names: 			list = []
+pci_dev_serial_numbers: list = []
 
-def getDevData(dev_path: str) -> dict:
-	with open(dev_path, "r") as dev:
-		return json.load(dev)
+stor_dev_obj: 			list = []
+stor_dev_vendors: 		list = []
+stor_dev_names: 		list = []
+stor_dev_serial_numbers:list = []
 
-def addDev(dev_path: str, dev_data: dict) -> None:
-	with open(dev_path, "w") as dev:
-		json.dump(dev_data, dev, indent=4)
+cpu_dev_obj:			list = []
+cpu_dev_vendors:		list = []
+cpu_dev_names:			list = []
+cpu_dev_serial_numbers: list = []
 
-def assignDevices() -> None:
-	for dev in devices:
-		dev_data: dict = getDevData(dev)
-		if not dev_data["name"] in dev_names and dev_data["vendor"] in dev_vendors and dev_data["serial_number"] in dev_serial_numbers:
-			addDev(f"dev/USB{len(devices) +1}.ddev", dev_data)
-			initDevices()
+class UsbActions:
+	@staticmethod
+	def addUsb(vendor: str, name: str, serial: str) -> None:
+		file_path: str = f"dev/USB{len(os.listdir('dev')) +1}.ddev"
+		to_add: dict = {"vendor": vendor, "name": name, "serial": serial}
 
-def initDevices() -> None:
-	usb_devs: list = os.path.listdir("dev")
-	for usb_dev_name in usb_devs:
-		if not usb_dev_name.startswith("USB"):
-			usb_devs.remove(usb_dev_name)
+		with open(f"dev/USB{len(os.listdir('dev')) +1}.ddev", "w") as dev:
+			json.dump(to_add, dev, indent=4)
+			c.info(f"Saved USB device (Identifier: USB{len(os.listdir('dev'))}.ddev)", True)
 
-	devices = usb_devs
-	usb_dev_nums: int = len(usb_devs)
+	@staticmethod
+	def retDevData(name: str) -> dict:
+		filename, ext = os.path.splitext(name)
+		if filename.startswith("USB") and ext == ".ddev":
+			with open(os.path.join("dev", name), "r") as dev:
+				return json.load(dev)
 
-	if usb_dev_nums == 0:
-		c.warn("System could not find any USB device.", True)
-		dragonKernel.terminal()
-	else:
-		assignDevices()
+	@staticmethod
+	def scanSaved() -> None:
+		usb_dev_data.clear()
+		for dev in os.listdir("dev"):
+			data = UsbActions.retDevData(dev)
+			if data: usb_dev_data.append(data)
+
+	@staticmethod
+	def scanUsb() -> None:
+		global usb_dev_obj
+		usb_dev_obj = usb.core.find(find_all=True)
+
+		for dev in usb_dev_obj:
+			try:
+				vendor: str = usb.util.get_string(dev, dev.iManufacturer) or "Unknown vendor"
+			except:
+				vendor: str = "Unknown vendor"
+
+			try:
+				name: str = usb.util.get_string(dev, dev.iProduct) or "Unknown name"
+			except:
+				name: str = "Unknown name"
+
+			try:
+				serial: str = usb.util.get_string(dev, dev.iSerialNumber) or "Unknown serial number"
+			except:
+				serial: str = "Unknown serial number"
+
+			if (vendor, name, serial) != ("Unknown vendor", "Unknown name", "Unknown serial number"):
+				c.info(f"Detected USB device: {vendor}: {name} ; SN: {serial}", True)
+				if not {"vendor": vendor, "name": name, "serial": serial} in usb_dev_data:
+					UsbActions.addUsb(vendor, name, serial)
+
+	@staticmethod
+	def initUsb() -> None:
+		UsbActions.scanSaved()
+		if len(usb_dev_data) == 0:
+			c.warn("System could not find any USB device. System halted", True)
+			dragonKernel.console(mode="nousbdev")
 
 def start() -> None:
 	try:
-		devices = usb.core.find(find_all=True)
+		UsbActions.scanSaved()
+		UsbActions.scanUsb()
+		UsbActions.initUsb()
 	except Exception as x:
-		c.error(f"IERR_X: Error finding USB devices: {x}")
-		exit("IERR_X")
-
-	initDevices()
+		c.error(f"IERR_3: Error finding USB devices: {x}")
+		exit("IERR_3")
