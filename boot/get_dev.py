@@ -1,15 +1,11 @@
 import usb.core
 import usb.util
 import os, sys, json
-from boot import dragonKernel
-from bin.termUtil import colors as c
+from boot.DragonKernel import DragonKernel
+from dsr.share.termUtil import colors as c
 
 dev_dir: list = []
-
 usb_dev_obj: list = []
-usb_dev_vendors: list = []
-usb_dev_names: list = []
-usb_dev_serials: list = []
 
 class DevActions:
 
@@ -91,7 +87,7 @@ class UsbActions(DevActions):
 
 	    if len(usb_dev_obj) == 0 and DevActions.filterDev("USB") == []:
 	        c.warn("System could not find any USB device. System halted", True)
-	        dragonKernel.console(throw="nousbdev")
+	        DragonKernel.console(throw="nousbdev")
 	        return
 
 	    existing_files = DevActions.filterDev("USB")
@@ -118,4 +114,5 @@ class UsbActions(DevActions):
 	            UsbActions.addUsbFile(info, current_file)
 
 def start() -> None:
+	c.info("Loading devices...")
 	UsbActions.compareUsbDevs()
