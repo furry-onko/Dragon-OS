@@ -1,8 +1,8 @@
 import usb.core
 import usb.util
 import os, sys, json
-from boot.DragonKernel import DragonKernel
 from dsr.share.termUtil import colors as c
+import sbin.usermanager as usrman
 
 dev_dir: list = []
 usb_dev_obj: list = []
@@ -116,3 +116,4 @@ class UsbActions(DevActions):
 def start() -> None:
 	c.info("Loading devices...")
 	UsbActions.compareUsbDevs()
+	usrman.main()
