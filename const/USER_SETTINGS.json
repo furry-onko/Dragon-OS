@@ -1,0 +1,66 @@
+{
+	"user_name": "",
+	"disp_name": "",
+	"identify_": "",
+	"settings": {
+		"network": {
+			"wifi": {
+				"available": false,
+				"wifi_enabled": false,
+				"always_connect": "",
+				"saved_networks": {}
+			},
+			"bluetooth": {
+				"available": false,
+				"bt_enabled": false,
+				"always_connect": "",
+				"paired_devs": {}
+			}
+		},
+		"system": {
+			"lang": "en_US",
+			""
+		}
+	},
+	"design": {
+		"bottom_bar": {
+			"pinned_apps": ["drg-files", "dash", "drg-help"],
+			"clock": {
+				"show_clock": false,
+				"show_clock_date": true,
+				"clock_date_format": "DD-MM-YYYY",
+				"clock_time_format": "HH-MM",
+			}
+		},
+		"top_bar": {
+			"left": [
+				{
+					"id": "appMenuOpenButton",
+					"text": "∨",
+				},
+				{
+					"id": "appsListButton",
+					"text": "Apps"
+				}
+			],
+			"center": [
+				{"id": "datetimeDisplay"},
+				{"id": "MuteIndicator"}
+			],
+			"right": [
+				{"id": "clipboardIndicator"},
+				{"id": "wifiIndicator"},
+				{"id": "soundIndicator"},
+				{"id": "powerIndicator"}
+			]
+		},
+		"desktop": {
+			"showIcons": true,
+			"gridSize_x": 10,
+			"gridSize_y": 5,
+			"showBin": true,
+			"showHome": true,
+			"content": []
+		}
+	}
+}
