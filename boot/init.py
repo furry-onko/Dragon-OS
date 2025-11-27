@@ -1,4 +1,5 @@
 import os, sys
+import configparser as cfp
 from boot import get_dev
 
 def checkRoot() -> None:
@@ -23,7 +24,6 @@ def start() -> None:
 	if os.geteuid() != 0:
 		print("\033[0;31mError IERR_0: System must be started using sudo\033[0m")
 		exit("IERR_0")
-	checkRoot()
 
 if __name__ == "__main__":
 	start()
